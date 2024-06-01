@@ -1,9 +1,10 @@
 import React, { useEffect, useRef, useState, useContext } from "react";
+import { ConnectXBoardContexts } from "../../CONTEXTs/ConnectXBoardContexts";
 /* IMGs ---------------------------------------------------------------------------------------------- IMG */
-import BOX_DARK from "./BOX_DARK.svg";
+import BOX_DARK from "./IMGs/board_box_dark_theme.svg";
 
-import player_1_finger_cursor_dark_theme from "./player_1_finger_cursor_dark_theme.png";
-import player_2_finger_cursor_dark_theme from "./player_2_finger_cursor_dark_theme.png";
+import player_1_finger_cursor_dark_theme from "./IMGs/player_1_finger_cursor_dark_theme.png";
+import player_2_finger_cursor_dark_theme from "./IMGs/player_2_finger_cursor_dark_theme.png";
 /* IMGs -------------------------------------------------------------------------------------------------- */
 const EMPTY_BOARD = [
   [0, 0, 0, 0, 0, 0],
@@ -70,7 +71,8 @@ const BoardCells = ({ row, Y }) => {
     </div>
   );
 };
-const BoardColumns = ({ board }) => {
+const BoardColumns = () => {
+  const { board } = useContext(ConnectXBoardContexts);
   return (
     <div
       style={{
@@ -90,15 +92,13 @@ const BoardColumns = ({ board }) => {
   );
 };
 /* { CUROSR FINGER } */
-const ControllableFingerCursor = ({
-  board,
-  boardDimensions,
-  playerType,
-  currentTurn,
-  handleDropOnColumn,
-}) => {
+const ControllableFingerCursor = ({ playerType }) => {
+  const { board, boardDimensions, currentTurn, handleDropOnColumn } =
+    useContext(ConnectXBoardContexts);
+
   const [pointingColumn, setPointingColumn] = useState(0);
   const [isCursorDown, setIsCursorDown] = useState(false);
+  const [top, setTop] = useState(0);
 
   /* { KEY DOWN LISTENER } */
   useEffect(() => {
@@ -150,13 +150,24 @@ const ControllableFingerCursor = ({
     };
   }, []);
   useEffect(() => {
-    if (isCursorDown) {
+    if (isCursorDown && playerType === currentTurn) {
       handleDropOnColumn(pointingColumn, CHECKER_TYPES.PLAYER_1);
-      setTimeout(() => {
-        setIsCursorDown(false);
-      }, 100);
     }
+    setTimeout(() => {
+      setIsCursorDown(false);
+    }, 64);
   }, [isCursorDown]);
+  useEffect(() => {
+    if (playerType !== currentTurn) {
+      setTimeout(() => {
+        setTop(`CALC(50% - ${boardDimensions[1] / 2 + BOX_SIZE * 1.2}px)`);
+      }, 128);
+    } else if (isCursorDown) {
+      setTop(`CALC(50% - ${boardDimensions[1] / 2 - 10}px)`);
+    } else {
+      setTop(`CALC(50% - ${boardDimensions[1] / 2 + 4}px)`);
+    }
+  }, [isCursorDown, boardDimensions]);
 
   return (
     <div>
@@ -164,11 +175,12 @@ const ControllableFingerCursor = ({
         src={PLAYER_CURSORs[playerType]}
         style={{
           position: "absolute",
-          transition: "left 0.12s ease, top 0.08s ease",
-          transform: "translate(-56%, -100%) rotate(180deg)",
-          top: isCursorDown
-            ? `CALC(50% - ${boardDimensions[1] / 2 - 10}px)`
-            : `CALC(50% - ${boardDimensions[1] / 2 + 4}px)`,
+          transition: "left 0.12s ease, top 0.08s ease, opacity 0.16s ease",
+          transform:
+            playerType === PLAYER_TYPES.PLAYER_1
+              ? " translate(-40%, -100%) rotate(180deg) scaleX(-1)"
+              : " translate(-56%, -100%) rotate(180deg) scaleX(1)",
+          top: top,
           left: `CALC(50% - ${
             boardDimensions[0] / 2 -
             (BOARD_BORDER + (1 / 2) * BOX_SIZE) -
@@ -183,24 +195,57 @@ const ControllableFingerCursor = ({
     </div>
   );
 };
-const BotFingerCursor = ({
-  board,
-  boardDimensions,
-  playerType,
-  currentTurn,
-  handleDropOnColumn,
-}) => {
+const UncontrollableFingerCursor = ({ playerType }) => {
+  const {
+    board,
+    boardDimensions,
+    currentTurn,
+    handleDropOnColumn,
+    checkColumnAvailability,
+  } = useContext(ConnectXBoardContexts);
+
   const [pointingColumn, setPointingColumn] = useState(0);
   const [isCursorDown, setIsCursorDown] = useState(false);
-
+  const [top, setTop] = useState(0);
+  useEffect(() => {
+    if (playerType === currentTurn) {
+      const interval = setInterval(() => {
+        setPointingColumn((prev) =>
+          prev + 1 > board[0].length - 1 ? 0 : prev + 1
+        );
+      }, 256);
+      setTimeout(() => {
+        let randomColumn = -1;
+        while (!checkColumnAvailability(randomColumn)) {
+          randomColumn = Math.floor(Math.random() * board[0].length);
+        }
+        setPointingColumn(randomColumn);
+        setIsCursorDown(true);
+      }, 2048);
+      return () => {
+        clearInterval(interval);
+      };
+    }
+  }, [currentTurn]);
   useEffect(() => {
     if (isCursorDown) {
       handleDropOnColumn(pointingColumn, playerType);
       setTimeout(() => {
         setIsCursorDown(false);
-      }, 100);
+      }, 128);
     }
   }, [isCursorDown]);
+  useEffect(() => {
+    if (playerType !== currentTurn) {
+      setTimeout(() => {
+        setTop(`CALC(50% - ${boardDimensions[1] / 2 + BOX_SIZE * 1.2}px)`);
+      }, 128);
+    } else if (isCursorDown) {
+      setTop(`CALC(50% - ${boardDimensions[1] / 2 - 10}px)`);
+    } else {
+      setTop(`CALC(50% - ${boardDimensions[1] / 2 + 4}px)`);
+    }
+  }, [isCursorDown, boardDimensions]);
 
   return (
     <div>
@@ -209,10 +254,11 @@ const BotFingerCursor = ({
         style={{
           position: "absolute",
           transition: "left 0.12s ease, top 0.08s ease",
-          transform: "translate(-56%, -100%) rotate(180deg)",
-          top: isCursorDown
-            ? `CALC(50% - ${boardDimensions[1] / 2 - 10}px)`
-            : `CALC(50% - ${boardDimensions[1] / 2 + 4}px)`,
+          transform:
+            playerType === PLAYER_TYPES.PLAYER_1
+              ? " translate(-40%, -100%) rotate(180deg) scaleX(-1)"
+              : " translate(-56%, -100%) rotate(180deg) scaleX(1)",
+          top: top,
           left: `CALC(50% - ${
             boardDimensions[0] / 2 -
             (BOARD_BORDER + (1 / 2) * BOX_SIZE) -
@@ -228,32 +274,6 @@ const BotFingerCursor = ({
   );
 };
 /* { CHECKER SUB COMPONENTs } */
-const CheckersMap = ({ board, boardDimensions }) => {
-  return (
-    <div>
-      {board.map((row, rowIndex) =>
-        row.map((box, boxIndex) =>
-          box !== CHECKER_TYPES.NONE ? (
-            <Checker
-              key={rowIndex + boxIndex}
-              checkerType={box}
-              X={`CALC(50% - ${
-                boardDimensions[1] / 2 -
-                (BOARD_BORDER + (1 / 2) * BOX_SIZE) -
-                rowIndex * BOX_SIZE
-              }px)`}
-              Y={`CALC(50% - ${
-                boardDimensions[0] / 2 -
-                (BOARD_BORDER + (1 / 2) * BOX_SIZE) -
-                boxIndex * BOX_SIZE
-              }px)`}
-            />
-          ) : null
-        )
-      )}
-    </div>
-  );
-};
 const Checker = ({ checkerType, X, Y }) => {
   const [checkerColor, setCheckerColor] = useState(CHECKER_COLORS.PLAYER_1);
   useEffect(() => {
@@ -286,6 +306,33 @@ const Checker = ({ checkerType, X, Y }) => {
     ></div>
   );
 };
+const CheckersMap = () => {
+  const { board, boardDimensions } = useContext(ConnectXBoardContexts);
+  return (
+    <div>
+      {board.map((row, rowIndex) =>
+        row.map((box, boxIndex) =>
+          box !== CHECKER_TYPES.NONE ? (
+            <Checker
+              key={rowIndex + boxIndex}
+              checkerType={box}
+              X={`CALC(50% - ${
+                boardDimensions[1] / 2 -
+                (BOARD_BORDER + (1 / 2) * BOX_SIZE) -
+                rowIndex * BOX_SIZE
+              }px)`}
+              Y={`CALC(50% - ${
+                boardDimensions[0] / 2 -
+                (BOARD_BORDER + (1 / 2) * BOX_SIZE) -
+                boxIndex * BOX_SIZE
+              }px)`}
+            />
+          ) : null
+        )
+      )}
+    </div>
+  );
+};
 /* SUB COMPONENTS ---------------------------------------------------------------------------------------- */
 
 const ConnectXBoard = () => {
@@ -301,6 +348,9 @@ const ConnectXBoard = () => {
     ]);
   }, [board]);
   /* { DROP CHECKERs } */
+  const checkColumnAvailability = (columnIndex) => {
+    return board[0][columnIndex] === 0;
+  };
   const handleDropOnColumn = (columnIndex, checkerType) => {
     for (let row = board.length - 1; row >= 0; row--) {
       if (board[row][columnIndex] === 0) {
@@ -326,15 +376,23 @@ const ConnectXBoard = () => {
 
   return (
     <div>
-      <BoardColumns board={board} />
-      <CheckersMap board={board} boardDimensions={boardDimensions} />
-      <ControllableFingerCursor
-        board={board}
-        boardDimensions={boardDimensions}
-        playerType={PLAYER_TYPES.PLAYER_1}
-        currentTurn={currentTurn}
-        handleDropOnColumn={handleDropOnColumn}
-      />
+      <ConnectXBoardContexts.Provider
+        value={{
+          board,
+          setBoard,
+          boardDimensions,
+          setBoardDimensions,
+          currentTurn,
+          setCurrentTurn,
+          handleDropOnColumn,
+          checkColumnAvailability,
+        }}
+      >
+        <BoardColumns />
+        <CheckersMap />
+        <UncontrollableFingerCursor playerType={PLAYER_TYPES.PLAYER_2} />
+        <ControllableFingerCursor playerType={PLAYER_TYPES.PLAYER_1} />
+      </ConnectXBoardContexts.Provider>
     </div>
   );
 };
