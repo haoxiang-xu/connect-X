@@ -1,4 +1,6 @@
 import React, { useEffect, useRef, useState, useContext } from "react";
+import axios from "axios";
+
 import { ConnectXBoardContexts } from "../../CONTEXTs/ConnectXBoardContexts";
 /* IMGs ---------------------------------------------------------------------------------------------- IMG */
 import BOX_DARK from "./IMGs/board_box_dark_theme.svg";
@@ -42,7 +44,27 @@ const PLAYER_CURSORs = {
 };
 /* CONST ------------------------------------------------------------------------------------------------- */
 
-/* SUB COMPONENTS --------------------------------------------------------------------------SUB COMPONENTS */
+/* FETCH =========================================================================================== FETCH */
+const sendState = async (board, playerType) => {
+  try {
+    const response = await axios.post(
+      "http://localhost:5000/request_agent_movement",
+      {
+        board: board.map((row) =>
+          row.map((cell) => (cell === 1 ? 1 : cell === 2 ? 2 : 0))
+        ),
+        player: playerType,
+      }
+    );
+    return response.data.column;
+  } catch (error) {
+    console.error("Error fetching the move from the backend:", error);
+    return null;
+  }
+};
+/* FETCH ================================================================================================= */
+
+/* SUB COMPONENTS ------------------------------------------------------------------------- SUB COMPONENTS */
 /* { BORAD SUB COMPONETs } */
 const BoardBox = ({ X, Y }) => {
   return (
@@ -214,16 +236,20 @@ const UncontrollableFingerCursor = ({ playerType }) => {
           prev + 1 > board[0].length - 1 ? 0 : prev + 1
         );
       }, 256);
-      setTimeout(() => {
-        let randomColumn = -1;
-        while (!checkColumnAvailability(randomColumn)) {
-          randomColumn = Math.floor(Math.random() * board[0].length);
+      const requestAgentMovement = async () => {
+        let agentPointingColumn = -1;
+        while (!checkColumnAvailability(agentPointingColumn)) {
+          agentPointingColumn = await sendState(board, PLAYER_TYPES.PLAYER_2);
         }
-        setPointingColumn(randomColumn);
+        setPointingColumn(agentPointingColumn);
         setIsCursorDown(true);
+      };
+      const timeout = setTimeout(() => {
+        requestAgentMovement();
       }, 2048);
       return () => {
         clearInterval(interval);
+        clearTimeout(timeout);
       };
     }
   }, [currentTurn]);
