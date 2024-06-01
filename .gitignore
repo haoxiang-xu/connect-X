@@ -1,1 +1,4 @@
 .DS_Store
+CONNECT_X_ENV
+
+connect-x-application/node_modules
