@@ -781,6 +781,38 @@ def request_agent_movement():
     column = agent.move(observation, configuration)
     
     return jsonify({'column': column})
+@app.route('/check_state_status', methods=['POST'])
+def check_state_status():
+    data = request.get_json()
+    board = np.array(data['board'])
+    player_type = data['player']
+    last_checker = data['last_checker']
+    
+    configuration = SimpleNamespace(
+        columns = board.shape[1],
+        rows = board.shape[0],
+        inarow = 4
+    )
+    observation = SimpleNamespace(
+        board = board.tolist()[::-1],
+        mark = player_type
+    )
+    
+    C = ConnectX(inarow = configuration.inarow, board = observation.board, turn = observation.mark, last_checker = [last_checker.row, last_checker.column])
+    
+    if C.last_checker_longest_connection() >= C.inarow:
+        return jsonify({'status': 3 - C.turn})
+    
+    is_draw = True
+    for r in range(C.rows):
+        for c in range(C.columns):
+            if C.board[r][c] == 0:
+                is_draw = False
+                break
+    if is_draw:
+        return jsonify({'status': 0})
+    return jsonify({'status': 3})
+
 
 if __name__ == '__main__':
     app.run(debug=True)

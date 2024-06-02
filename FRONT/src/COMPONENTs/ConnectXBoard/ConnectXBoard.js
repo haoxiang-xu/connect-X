@@ -6,20 +6,22 @@ import { ConnectXBoardContexts } from "../../CONTEXTs/ConnectXBoardContexts";
 import BOX_DARK from "./IMGs/board_box_dark_theme.svg";
 
 import player_1_finger_cursor_dark_theme from "./IMGs/player_1_finger_cursor_dark_theme.png";
+import player_1_finger_snap_dark_theme from "./IMGs/player_1_finger_snap_dark_theme.png";
 import player_2_finger_cursor_dark_theme from "./IMGs/player_2_finger_cursor_dark_theme.png";
+import player_2_finger_snap_dark_theme from "./IMGs/player_2_finger_snap_dark_theme.png";
 /* IMGs -------------------------------------------------------------------------------------------------- */
 const EMPTY_BOARD = [
-  [0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0],
 ];
 /* CONSTs ----------------------------------------------------------------------------------------- CONSTs */
 /* { SIZEs } */
 const BOX_SIZE = 40;
-const CHECKER_SIZE = 27;
+const CHECKER_SIZE = 24;
 const BOARD_BORDER = 12;
 /* { TYPEs } */
 const CHECKER_TYPES = {
@@ -33,6 +35,12 @@ const PLAYER_TYPES = {
   PLAYER_1: 1,
   PLAYER_2: 2,
 };
+const GAME_STATUS = {
+  DRAW: 0,
+  PLAYER_1_WIN: 1,
+  PLAYER_2_WIN: 2,
+  IN_PROGRESS: 3,
+};
 const CHECKER_COLORS = {
   PLAYER_1: "#8C8C8C",
   PLAYER_2: "#494949",
@@ -41,11 +49,13 @@ const CHECKER_COLORS = {
 const PLAYER_CURSORs = {
   1: player_1_finger_cursor_dark_theme,
   2: player_2_finger_cursor_dark_theme,
+  3: player_1_finger_snap_dark_theme,
+  4: player_2_finger_snap_dark_theme,
 };
 /* CONST ------------------------------------------------------------------------------------------------- */
 
 /* FETCH =========================================================================================== FETCH */
-const sendState = async (board, playerType) => {
+const requestMovement = async (board, playerType) => {
   try {
     const response = await axios.post(
       "http://localhost:5000/request_agent_movement",
@@ -57,6 +67,24 @@ const sendState = async (board, playerType) => {
       }
     );
     return response.data.column;
+  } catch (error) {
+    console.error("Error fetching the move from the backend:", error);
+    return null;
+  }
+};
+const checkStateStatus = async (board, playerType, lastChecker) => {
+  try {
+    const response = await axios.post(
+      "http://localhost:5000/check_state_status",
+      {
+        board: board.map((row) =>
+          row.map((cell) => (cell === 1 ? 1 : cell === 2 ? 2 : 0))
+        ),
+        player: playerType,
+        lastChecker: lastChecker,
+      }
+    );
+    return response.data.status;
   } catch (error) {
     console.error("Error fetching the move from the backend:", error);
     return null;
@@ -118,9 +146,10 @@ const ControllableFingerCursor = ({ playerType }) => {
   const { board, boardDimensions, currentTurn, handleDropOnColumn } =
     useContext(ConnectXBoardContexts);
 
-  const [pointingColumn, setPointingColumn] = useState(0);
+  const [pointingColumn, setPointingColumn] = useState(board[0].length - 1);
   const [isCursorDown, setIsCursorDown] = useState(false);
-  const [top, setTop] = useState(0);
+  const [top, setTop] = useState(null);
+  const [transform, setTransform] = useState(null);
 
   /* { KEY DOWN LISTENER } */
   useEffect(() => {
@@ -171,6 +200,7 @@ const ControllableFingerCursor = ({ playerType }) => {
       document.removeEventListener("keydown", handleKeyDown);
     };
   }, []);
+  /* { DROP COLUMN WHEN CURSOR DOWN } */
   useEffect(() => {
     if (isCursorDown && playerType === currentTurn) {
       handleDropOnColumn(pointingColumn, CHECKER_TYPES.PLAYER_1);
@@ -179,7 +209,9 @@ const ControllableFingerCursor = ({ playerType }) => {
       setIsCursorDown(false);
     }, 64);
   }, [isCursorDown]);
+  /* { STYLING } */
   useEffect(() => {
+    /* { TOP } */
     if (playerType !== currentTurn) {
       setTimeout(() => {
         setTop(`CALC(50% - ${boardDimensions[1] / 2 + BOX_SIZE * 1.2}px)`);
@@ -189,19 +221,34 @@ const ControllableFingerCursor = ({ playerType }) => {
     } else {
       setTop(`CALC(50% - ${boardDimensions[1] / 2 + 4}px)`);
     }
-  }, [isCursorDown, boardDimensions]);
+    /* { TRANSFORM } */
+    if (playerType === PLAYER_TYPES.PLAYER_1) {
+      if (playerType === currentTurn) {
+        setTransform(` translate(-35%, -100%) scaleX(1)`);
+      } else {
+        setTransform(` translate(-35%, -100%) scaleX(-1)`);
+      }
+    } else {
+      if (playerType === currentTurn) {
+        setTransform(` translate(-60%, -100%) scaleX(-1)`);
+      } else {
+        setTransform(` translate(-60%, -100%) scaleX(1)`);
+      }
+    }
+  }, [isCursorDown, boardDimensions, currentTurn]);
 
   return (
     <div>
       <img
-        src={PLAYER_CURSORs[playerType]}
+        src={
+          playerType === currentTurn
+            ? PLAYER_CURSORs[playerType]
+            : PLAYER_CURSORs[playerType + 2]
+        }
         style={{
           position: "absolute",
           transition: "left 0.12s ease, top 0.08s ease, opacity 0.16s ease",
-          transform:
-            playerType === PLAYER_TYPES.PLAYER_1
-              ? " translate(-40%, -100%) rotate(180deg) scaleX(-1)"
-              : " translate(-56%, -100%) rotate(180deg) scaleX(1)",
+          transform: transform,
           top: top,
           left: `CALC(50% - ${
             boardDimensions[0] / 2 -
@@ -228,7 +275,9 @@ const UncontrollableFingerCursor = ({ playerType }) => {
 
   const [pointingColumn, setPointingColumn] = useState(0);
   const [isCursorDown, setIsCursorDown] = useState(false);
-  const [top, setTop] = useState(0);
+  const [top, setTop] = useState(null);
+  const [transform, setTransform] = useState(null);
+
   useEffect(() => {
     if (playerType === currentTurn) {
       const interval = setInterval(() => {
@@ -239,7 +288,10 @@ const UncontrollableFingerCursor = ({ playerType }) => {
       const requestAgentMovement = async () => {
         let agentPointingColumn = -1;
         while (!checkColumnAvailability(agentPointingColumn)) {
-          agentPointingColumn = await sendState(board, PLAYER_TYPES.PLAYER_2);
+          agentPointingColumn = await requestMovement(
+            board,
+            PLAYER_TYPES.PLAYER_2
+          );
         }
         setPointingColumn(agentPointingColumn);
         setIsCursorDown(true);
@@ -261,7 +313,9 @@ const UncontrollableFingerCursor = ({ playerType }) => {
       }, 128);
     }
   }, [isCursorDown]);
+  /* { STYLING } */
   useEffect(() => {
+    /* { TOP } */
     if (playerType !== currentTurn) {
       setTimeout(() => {
         setTop(`CALC(50% - ${boardDimensions[1] / 2 + BOX_SIZE * 1.2}px)`);
@@ -271,19 +325,34 @@ const UncontrollableFingerCursor = ({ playerType }) => {
     } else {
       setTop(`CALC(50% - ${boardDimensions[1] / 2 + 4}px)`);
     }
-  }, [isCursorDown, boardDimensions]);
+    /* { TRANSFORM } */
+    if (playerType === PLAYER_TYPES.PLAYER_1) {
+      if (playerType === currentTurn) {
+        setTransform(` translate(-35%, -100%) scaleX(1)`);
+      } else {
+        setTransform(` translate(-35%, -100%) scaleX(-1)`);
+      }
+    } else {
+      if (playerType === currentTurn) {
+        setTransform(` translate(-60%, -100%) scaleX(-1)`);
+      } else {
+        setTransform(` translate(-60%, -100%) scaleX(1)`);
+      }
+    }
+  }, [isCursorDown, boardDimensions, currentTurn]);
 
   return (
     <div>
       <img
-        src={PLAYER_CURSORs[playerType]}
+        src={
+          playerType === currentTurn
+            ? PLAYER_CURSORs[playerType]
+            : PLAYER_CURSORs[playerType + 2]
+        }
         style={{
           position: "absolute",
           transition: "left 0.12s ease, top 0.08s ease",
-          transform:
-            playerType === PLAYER_TYPES.PLAYER_1
-              ? " translate(-40%, -100%) rotate(180deg) scaleX(-1)"
-              : " translate(-56%, -100%) rotate(180deg) scaleX(1)",
+          transform: transform,
           top: top,
           left: `CALC(50% - ${
             boardDimensions[0] / 2 -
@@ -365,6 +434,8 @@ const ConnectXBoard = () => {
   const [board, setBoard] = useState(EMPTY_BOARD);
   const [boardDimensions, setBoardDimensions] = useState([0, 0]);
   const [currentTurn, setCurrentTurn] = useState(PLAYER_TYPES.PLAYER_1);
+  const [lastChecker, setLastChecker] = useState(null);
+  const [inarow, setInarow] = useState(0);
 
   /* { BOARD DIMENSIONS UPDATER } */
   useEffect(() => {
@@ -373,6 +444,8 @@ const ConnectXBoard = () => {
       board.length * BOX_SIZE + BOARD_BORDER * 2,
     ]);
   }, [board]);
+  /* { CHECK GAME STATUS } */
+
   /* { DROP CHECKERs } */
   const checkColumnAvailability = (columnIndex) => {
     return board[0][columnIndex] === 0;
@@ -394,7 +467,7 @@ const ConnectXBoard = () => {
             ? PLAYER_TYPES.PLAYER_2
             : PLAYER_TYPES.PLAYER_1
         );
-
+        setLastChecker({ row, column: columnIndex });
         break;
       }
     }
