@@ -334,7 +334,7 @@ const UncontrollableFingerCursor = ({ playerType }) => {
         while (!checkColumnAvailability(agentPointingColumn)) {
           agentPointingColumn = await requestMovement(
             board,
-            PLAYER_TYPES.PLAYER_2,
+            playerType,
             inarow
           );
         }
@@ -549,11 +549,7 @@ const ConnectXBoard = () => {
           return currentRow;
         });
         setBoard(newBoard);
-        setCurrentTurn((prev) =>
-          prev === PLAYER_TYPES.PLAYER_1
-            ? PLAYER_TYPES.PLAYER_2
-            : PLAYER_TYPES.PLAYER_1
-        );
+        setCurrentTurn(3 - currentTurn);
         setLastChecker({ row, column: columnIndex });
         break;
       }
