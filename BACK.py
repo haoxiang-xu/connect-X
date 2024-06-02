@@ -763,11 +763,12 @@ def request_agent_movement():
     data = request.get_json()
     board = np.array(data['board'])
     player_type = data['player']
+    inarow = data['inarow']
     
     configuration = SimpleNamespace(
         columns = board.shape[1],
         rows = board.shape[0],
-        inarow = 4
+        inarow = inarow
     )
     observation = SimpleNamespace(
         board = board.tolist()[::-1],
@@ -786,20 +787,20 @@ def check_state_status():
     data = request.get_json()
     board = np.array(data['board'])
     player_type = data['player']
-    last_checker = data['last_checker']
+    inarow = data['inarow']
+    last_checker = data['lastChecker']
     
     configuration = SimpleNamespace(
         columns = board.shape[1],
         rows = board.shape[0],
-        inarow = 4
+        inarow = inarow
     )
     observation = SimpleNamespace(
         board = board.tolist()[::-1],
         mark = player_type
     )
-    
-    C = ConnectX(inarow = configuration.inarow, board = observation.board, turn = observation.mark, last_checker = [last_checker.row, last_checker.column])
-    
+
+    C = ConnectX(inarow = configuration.inarow, board = observation.board, turn = observation.mark, last_checker = [board.shape[0] - 1 - last_checker['row'], last_checker['column']])
     if C.last_checker_longest_connection() >= C.inarow:
         return jsonify({'status': 3 - C.turn})
     
