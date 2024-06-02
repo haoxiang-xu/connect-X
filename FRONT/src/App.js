@@ -1,8 +1,13 @@
-import React from "react";
+import React, { useEffect, useRef, useState, useContext } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import ConnectXBoard from "./COMPONENTs/ConnectXBoard/ConnectXBoard";
+
+import { GlobalContexts } from "./CONTEXTs/GlobalContexts";
+
+import ConnectXGameDataManager from "./DATA_MANAGERs/ConnectXGameDataManager";
 
 const App = () => {
+  const [underDarkTheme, setUnderDarkTheme] = useState(true);
+
   return (
     <div
       className="App"
@@ -13,15 +18,16 @@ const App = () => {
         height: "100vh",
         width: "100vw",
         transform: "translate(-50%, -50%)",
-        backgroundColor: "#181818",
         overflow: "hidden",
       }}
     >
-      <Router>
-        <Routes>
-          <Route path="/" element={<ConnectXBoard />} />
-        </Routes>
-      </Router>
+      <GlobalContexts.Provider value={{ underDarkTheme, setUnderDarkTheme }}>
+        <Router>
+          <Routes>
+            <Route path="/" element={<ConnectXGameDataManager />} />
+          </Routes>
+        </Router>
+      </GlobalContexts.Provider>
     </div>
   );
 };

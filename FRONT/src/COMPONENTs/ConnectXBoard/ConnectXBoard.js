@@ -1,9 +1,11 @@
 import React, { useEffect, useRef, useState, useContext } from "react";
 import axios from "axios";
 
+import { GlobalContexts } from "../../CONTEXTs/GlobalContexts";
 import { ConnectXBoardContexts } from "../../CONTEXTs/ConnectXBoardContexts";
 /* IMGs ---------------------------------------------------------------------------------------------- IMG */
 import BOX_DARK from "./IMGs/board_box_dark_theme.svg";
+import BOX_LIGHT from "./IMGs/board_box_light_theme.svg";
 
 import player_1_finger_cursor_dark_theme from "./IMGs/player_1_finger_cursor_dark_theme.png";
 import player_1_finger_snap_dark_theme from "./IMGs/player_1_finger_snap_dark_theme.png";
@@ -106,10 +108,12 @@ const checkStateStatus = async (board, playerType, inarow, lastChecker) => {
 /* SUB COMPONENTS ------------------------------------------------------------------------- SUB COMPONENTS */
 /* { BORAD SUB COMPONETs } */
 const BoardBox = ({ X, Y }) => {
+  const { underDarkTheme } = useContext(GlobalContexts);
+
   return (
     <div>
       <img
-        src={BOX_DARK}
+        src={underDarkTheme ? BOX_DARK : BOX_LIGHT}
         style={{
           position: "absolute",
           top: Y - 1,
@@ -133,12 +137,14 @@ const BoardCells = ({ row, Y }) => {
   );
 };
 const BoardColumns = () => {
+  const { underDarkTheme } = useContext(GlobalContexts);
   const { board } = useContext(ConnectXBoardContexts);
   return (
     <div
       style={{
         position: "absolute",
-        border: BOARD_BORDER + "px solid #1E1E1E",
+        border:
+          BOARD_BORDER + "px solid " + (underDarkTheme ? "#1E1E1E" : "#D9D9D9"),
         top: "50%",
         left: "50%",
         transform: "translate(-50%, -50%)",
@@ -577,7 +583,8 @@ const ConnectXBoard = () => {
         <BoardColumns />
         <CheckersMap />
         <UncontrollableFingerCursor playerType={PLAYER_TYPES.PLAYER_2} />
-        <ControllableFingerCursor playerType={PLAYER_TYPES.PLAYER_1} />
+        <UncontrollableFingerCursor playerType={PLAYER_TYPES.PLAYER_1} />
+        {/* <ControllableFingerCursor playerType={PLAYER_TYPES.PLAYER_1} /> */}
       </ConnectXBoardContexts.Provider>
     </div>
   );
