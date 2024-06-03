@@ -237,11 +237,11 @@ const ControllableFingerCursor = ({ playerType }) => {
   /* { DROP COLUMN WHEN CURSOR DOWN } */
   useEffect(() => {
     if (isCursorDown && playerType === currentTurn) {
-      handleDropOnColumn(pointingColumn, CHECKER_TYPES.PLAYER_1);
+      handleDropOnColumn(pointingColumn, playerType);
     }
     setTimeout(() => {
       setIsCursorDown(false);
-    }, 64);
+    }, 128);
   }, [isCursorDown]);
   /* { STYLING } */
   useEffect(() => {
@@ -285,7 +285,7 @@ const ControllableFingerCursor = ({ playerType }) => {
     } else {
       setImgSrc(PLAYER_CURSORs[playerType + 2]);
     }
-  }, [isCursorDown, boardDimensions, currentTurn]);
+  }, [isCursorDown, boardDimensions, currentTurn, pointingColumn]);
 
   return (
     <div>
@@ -311,6 +311,7 @@ const ControllableFingerCursor = ({ playerType }) => {
   );
 };
 const UncontrollableFingerCursor = ({ playerType }) => {
+  const { agent1Type, agent2Type } = useContext(GlobalContexts);
   const {
     board,
     inarow,
@@ -338,11 +339,14 @@ const UncontrollableFingerCursor = ({ playerType }) => {
       }, 256);
       const requestAgentMovement = async () => {
         let agentPointingColumn = -1;
+        const agentType =
+          playerType === PLAYER_TYPES.PLAYER_1 ? agent1Type : agent2Type;
+
         while (!checkColumnAvailability(agentPointingColumn)) {
           agentPointingColumn = await requestMovement(
             board,
             playerType,
-            "MONTE_CARLO",
+            agentType,
             inarow
           );
         }
@@ -539,7 +543,7 @@ const PlayAndPauseButton = () => {
 /* SUB COMPONENTS ---------------------------------------------------------------------------------------- */
 
 const ConnectXBoard = () => {
-  const { onPage } = useContext(GlobalContexts);
+  const { onPage, agent1Type, agent2Type } = useContext(GlobalContexts);
 
   const [board, setBoard] = useState(EMPTY_BOARD);
   const [inarow, setInarow] = useState(4);
@@ -651,9 +655,16 @@ const ConnectXBoard = () => {
       >
         <BoardColumns />
         <CheckersMap />
-        <UncontrollableFingerCursor playerType={PLAYER_TYPES.PLAYER_2} />
-        <UncontrollableFingerCursor playerType={PLAYER_TYPES.PLAYER_1} />
-        {/* <ControllableFingerCursor playerType={PLAYER_TYPES.PLAYER_1} /> */}
+        {agent2Type !== "HUMAN" ? (
+          <UncontrollableFingerCursor playerType={PLAYER_TYPES.PLAYER_2} />
+        ) : (
+          <ControllableFingerCursor playerType={PLAYER_TYPES.PLAYER_2} />
+        )}
+        {agent1Type !== "HUMAN" ? (
+          <UncontrollableFingerCursor playerType={PLAYER_TYPES.PLAYER_1} />
+        ) : (
+          <ControllableFingerCursor playerType={PLAYER_TYPES.PLAYER_1} />
+        )}
         <PlayAndPauseButton />
       </ConnectXBoardContexts.Provider>
     </div>

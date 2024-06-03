@@ -11,7 +11,7 @@ const ConnectXGameDataManager = () => {
   const [underDarkTheme, setUnderDarkTheme] = useState(true);
 
   const [agent1Type, setAgent1Type] = useState("HUMAN");
-  const [agent2Type, setAgent2Type] = useState("MONTE CARLO SEARCH");
+  const [agent2Type, setAgent2Type] = useState("MONTE_CARLO");
 
   return (
     <GlobalContexts.Provider
