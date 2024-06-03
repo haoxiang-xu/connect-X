@@ -16,6 +16,8 @@ import player_2_finger_cursor_dark_theme from "./IMGs/player_2_finger_cursor_dar
 import player_2_finger_snap_dark_theme from "./IMGs/player_2_finger_snap_dark_theme.png";
 import player_2_finger_crown_dark_theme from "./IMGs/player_2_finger_crown_dark_theme.png";
 import player_2_finger_death_dark_theme from "./IMGs/player_2_finger_death_dark_theme.png";
+
+import { RiPlayLine, RiPauseLine } from "@remixicon/react";
 /* IMGs -------------------------------------------------------------------------------------------------- */
 const EMPTY_BOARD = [
   [0, 0, 0, 0, 0, 0, 0],
@@ -47,6 +49,7 @@ const GAME_STATUS = {
   PLAYER_1_WIN: 1,
   PLAYER_2_WIN: 2,
   IN_PROGRESS: 3,
+  PAUSE: 4,
 };
 const CHECKER_COLORS = {
   PLAYER_1: "#8C8C8C",
@@ -319,11 +322,13 @@ const UncontrollableFingerCursor = ({ playerType }) => {
   const [pointingColumn, setPointingColumn] = useState(0);
   const [isCursorDown, setIsCursorDown] = useState(false);
   const [top, setTop] = useState(null);
+  const [left, setLeft] = useState(null);
   const [transform, setTransform] = useState(null);
   const [imgSrc, setImgSrc] = useState(null);
 
+  /* { REQUEST MOVEMENT WHEN SELF TURN } */
   useEffect(() => {
-    if (playerType === currentTurn) {
+    if (playerType === currentTurn && gameStatus === GAME_STATUS.IN_PROGRESS) {
       const interval = setInterval(() => {
         setPointingColumn((prev) =>
           prev + 1 > board[0].length - 1 ? 0 : prev + 1
@@ -349,14 +354,16 @@ const UncontrollableFingerCursor = ({ playerType }) => {
         clearTimeout(timeout);
       };
     }
-  }, [currentTurn]);
+  }, [currentTurn, gameStatus]);
+  /* { DROP COLUMN WHEN CURSOR DOWN } */
   useEffect(() => {
-    if (isCursorDown) {
+    if (isCursorDown && gameStatus === GAME_STATUS.IN_PROGRESS) {
       handleDropOnColumn(pointingColumn, playerType);
       setTimeout(() => {
         setIsCursorDown(false);
       }, 128);
     }
+    setIsCursorDown(false);
   }, [isCursorDown]);
   /* { STYLING } */
   useEffect(() => {
@@ -373,6 +380,16 @@ const UncontrollableFingerCursor = ({ playerType }) => {
       setTop(`CALC(50% - ${boardDimensions[1] / 2 - 10}px)`);
     } else {
       setTop(`CALC(50% - ${boardDimensions[1] / 2 + 4}px)`);
+    }
+    /* { LEFT } */
+    if (gameStatus === GAME_STATUS.IN_PROGRESS) {
+      setLeft(
+        `CALC(50% - ${
+          boardDimensions[0] / 2 -
+          (BOARD_BORDER + (1 / 2) * BOX_SIZE) -
+          pointingColumn * BOX_SIZE
+        }px)`
+      );
     }
     /* { TRANSFORM } */
     if (playerType === PLAYER_TYPES.PLAYER_1) {
@@ -400,7 +417,7 @@ const UncontrollableFingerCursor = ({ playerType }) => {
     } else {
       setImgSrc(PLAYER_CURSORs[playerType + 2]);
     }
-  }, [isCursorDown, boardDimensions, currentTurn]);
+  }, [isCursorDown, boardDimensions, currentTurn, pointingColumn]);
 
   return (
     <div>
@@ -411,11 +428,7 @@ const UncontrollableFingerCursor = ({ playerType }) => {
           transition: "left 0.12s ease, top 0.08s ease",
           transform: transform,
           top: top,
-          left: `CALC(50% - ${
-            boardDimensions[0] / 2 -
-            (BOARD_BORDER + (1 / 2) * BOX_SIZE) -
-            pointingColumn * BOX_SIZE
-          }px)`,
+          left: left,
           height: BOX_SIZE,
           width: BOX_SIZE,
           userSelect: "none",
@@ -485,6 +498,39 @@ const CheckersMap = () => {
     </div>
   );
 };
+/* { PLAY AND PAUSE BUTTON } */
+const PlayAndPauseButton = () => {
+  const { boardDimensions, gameStatus, setGameStatus } = useContext(
+    ConnectXBoardContexts
+  );
+
+  const handlePlayAndPause = () => {
+    if (gameStatus === GAME_STATUS.IN_PROGRESS) {
+      setGameStatus(GAME_STATUS.PAUSE);
+    } else if (gameStatus === GAME_STATUS.PAUSE) {
+      setGameStatus(GAME_STATUS.IN_PROGRESS);
+    }
+  };
+  return (
+    <div
+      style={{
+        position: "absolute",
+        top: `CALC(50% + ${boardDimensions[1] / 2 + 24}px)`,
+        left: "50%",
+        transform: "translate(-50%, 0%)",
+      }}
+    >
+      {gameStatus !== GAME_STATUS.IN_PROGRESS ? (
+        <RiPlayLine style={{ color: "#494949" }} onClick={handlePlayAndPause} />
+      ) : (
+        <RiPauseLine
+          style={{ color: "#494949" }}
+          onClick={handlePlayAndPause}
+        />
+      )}
+    </div>
+  );
+};
 /* SUB COMPONENTS ---------------------------------------------------------------------------------------- */
 
 const ConnectXBoard = () => {
@@ -548,9 +594,11 @@ const ConnectXBoard = () => {
           }
           return currentRow;
         });
-        setBoard(newBoard);
-        setCurrentTurn(3 - currentTurn);
-        setLastChecker({ row, column: columnIndex });
+        if (gameStatus === GAME_STATUS.IN_PROGRESS) {
+          setBoard(newBoard);
+          setCurrentTurn(3 - currentTurn);
+          setLastChecker({ row, column: columnIndex });
+        }
         break;
       }
     }
@@ -581,6 +629,7 @@ const ConnectXBoard = () => {
         <UncontrollableFingerCursor playerType={PLAYER_TYPES.PLAYER_2} />
         <UncontrollableFingerCursor playerType={PLAYER_TYPES.PLAYER_1} />
         {/* <ControllableFingerCursor playerType={PLAYER_TYPES.PLAYER_1} /> */}
+        <PlayAndPauseButton />
       </ConnectXBoardContexts.Provider>
     </div>
   );
