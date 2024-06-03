@@ -1,14 +1,10 @@
 import React, { useEffect, useRef, useState, useContext } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 
-import { GlobalContexts } from "./CONTEXTs/GlobalContexts";
-
 import ConnectXGameDataManager from "./DATA_MANAGERs/ConnectXGameDataManager";
 import ConnectXSystemSettingMenu from "./COMPONENTs/ConnectXSettingMenu/ConnectXSettingMenu";
 
 const App = () => {
-  const [underDarkTheme, setUnderDarkTheme] = useState(true);
-
   return (
     <div
       className="App"
@@ -22,7 +18,6 @@ const App = () => {
         overflow: "hidden",
       }}
     >
-      <GlobalContexts.Provider value={{ underDarkTheme, setUnderDarkTheme }}>
         <Router>
           <Routes>
             <Route path="/" element={<ConnectXGameDataManager />} />
@@ -32,7 +27,6 @@ const App = () => {
             />
           </Routes>
         </Router>
-      </GlobalContexts.Provider>
     </div>
   );
 };

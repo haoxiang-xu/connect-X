@@ -535,6 +535,8 @@ const PlayAndPauseButton = () => {
 /* SUB COMPONENTS ---------------------------------------------------------------------------------------- */
 
 const ConnectXBoard = () => {
+  const { onPage } = useContext(GlobalContexts); 
+
   const [board, setBoard] = useState(EMPTY_BOARD);
   const [inarow, setInarow] = useState(4);
   const [lastChecker, setLastChecker] = useState(null);
@@ -615,12 +617,13 @@ const ConnectXBoard = () => {
     <div
       style={{
         position: "absolute",
-        top: "50%",
+        top: onPage === "GAME" ? "50%" : "-150%",
         left: "50%",
         height: "100vh",
         width: "100vw",
         transform: "translate(-50%, -50%)",
         overflow: "hidden",
+        transition: "0.64s cubic-bezier(0.64, -0.16, 0.2, 1.28)",
       }}
     >
       <ConnectXBoardContexts.Provider
