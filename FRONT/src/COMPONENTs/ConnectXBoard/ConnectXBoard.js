@@ -324,7 +324,13 @@ const ControllableFingerCursor = ({ playerType }) => {
         PLAYER_CURSORs[underDarkTheme ? playerType + 2 : playerType + 12]
       );
     }
-  }, [isCursorDown, boardDimensions, currentTurn, pointingColumn, underDarkTheme]);
+  }, [
+    isCursorDown,
+    boardDimensions,
+    currentTurn,
+    pointingColumn,
+    underDarkTheme,
+  ]);
 
   return (
     <div>
@@ -477,7 +483,13 @@ const UncontrollableFingerCursor = ({ playerType }) => {
         PLAYER_CURSORs[underDarkTheme ? playerType + 2 : playerType + 12]
       );
     }
-  }, [isCursorDown, boardDimensions, currentTurn, pointingColumn, underDarkTheme]);
+  }, [
+    isCursorDown,
+    boardDimensions,
+    currentTurn,
+    pointingColumn,
+    underDarkTheme,
+  ]);
 
   return (
     <div>
@@ -708,7 +720,7 @@ const ConnectXBoard = () => {
         width: "100vw",
         transform: "translate(-50%, -50%)",
         overflow: "hidden",
-        transition: "top 0.64s cubic-bezier(0.64, -0.16, 0.2, 1.28)",
+        transition: "top 0.72s cubic-bezier(0.64, -0.16, 0.2, 1.16)",
       }}
     >
       <ConnectXBoardContexts.Provider

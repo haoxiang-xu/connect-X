@@ -90,7 +90,8 @@ const ConnectXSettingMenu = () => {
         height: "100vh",
         width: "100vw",
         transform: "translate(-50%, -50%)",
-        transition: "color 0.16s, top 0.64s cubic-bezier(0.32, -0.16, 0.2, 1.28)",
+        transition:
+          "color 0.16s, top 0.72s cubic-bezier(0.64, -0.16, 0.2, 1.16)",
       }}
     >
       <RiSettingsLine
@@ -104,7 +105,8 @@ const ConnectXSettingMenu = () => {
           color: underDarkTheme
             ? DARK_THEME.hidden_forground
             : LIGHT_THEME.hidden_forground,
-            transition: "color 0.16s, top 0.64s cubic-bezier(0.32, -0.16, 0.2, 1.28)",
+          transition:
+            "color 0.16s, top 0.72s cubic-bezier(0.64, -0.16, 0.2, 1.16)",
         }}
         onClick={() => setOnPage("SETTING")}
       />
@@ -112,7 +114,7 @@ const ConnectXSettingMenu = () => {
       <RiArrowDownWideFill
         style={{
           position: "absolute",
-          top: "CALC(100% - 32px)",
+          top: "CALC(0% + 32px)",
           left: "50%",
           transform: "translate(-50%, -50%)",
           height: "20px",
@@ -120,7 +122,8 @@ const ConnectXSettingMenu = () => {
           color: underDarkTheme
             ? DARK_THEME.hidden_forground
             : LIGHT_THEME.hidden_forground,
-          transition: "color 0.16s, top 0.64s cubic-bezier(0.32, -0.16, 0.2, 1.28)",
+          transition:
+            "color 0.16s, top 0.72s cubic-bezier(0.64, -0.16, 0.2, 1.16)",
         }}
         onClick={() => setOnPage("GAME")}
       />
