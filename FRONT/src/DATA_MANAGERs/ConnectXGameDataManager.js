@@ -10,7 +10,7 @@ const ConnectXGameDataManager = () => {
 
   const [underDarkTheme, setUnderDarkTheme] = useState(true);
 
-  const [agent1Type, setAgent1Type] = useState("HUMAN");
+  const [agent1Type, setAgent1Type] = useState("MONTE_CARLO");
   const [agent2Type, setAgent2Type] = useState("MONTE_CARLO");
 
   return (

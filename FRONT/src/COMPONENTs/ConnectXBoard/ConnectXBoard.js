@@ -11,11 +11,13 @@ import player_1_finger_cursor_dark_theme from "./IMGs/player_1_finger_cursor_dar
 import player_1_finger_snap_dark_theme from "./IMGs/player_1_finger_snap_dark_theme.png";
 import player_1_finger_crown_dark_theme from "./IMGs/player_1_finger_crown_dark_theme.png";
 import player_1_finger_death_dark_theme from "./IMGs/player_1_finger_death_dark_theme.png";
+import player_1_finger_love_dark_theme from "./IMGs/player_1_finger_love_dark_theme.png";
 
 import player_2_finger_cursor_dark_theme from "./IMGs/player_2_finger_cursor_dark_theme.png";
 import player_2_finger_snap_dark_theme from "./IMGs/player_2_finger_snap_dark_theme.png";
 import player_2_finger_crown_dark_theme from "./IMGs/player_2_finger_crown_dark_theme.png";
 import player_2_finger_death_dark_theme from "./IMGs/player_2_finger_death_dark_theme.png";
+import player_2_finger_love_dark_theme from "./IMGs/player_2_finger_love_dark_theme.png";
 
 import { RiPlayLine, RiPauseLine } from "@remixicon/react";
 /* IMGs -------------------------------------------------------------------------------------------------- */
@@ -66,6 +68,8 @@ const PLAYER_CURSORs = {
   6: player_2_finger_crown_dark_theme,
   7: player_1_finger_death_dark_theme,
   8: player_2_finger_death_dark_theme,
+  9: player_1_finger_love_dark_theme,
+  10: player_2_finger_love_dark_theme,
 };
 /* CONST ------------------------------------------------------------------------------------------------- */
 
@@ -175,9 +179,17 @@ const ControllableFingerCursor = ({ playerType }) => {
 
   const [pointingColumn, setPointingColumn] = useState(board[0].length - 1);
   const [isCursorDown, setIsCursorDown] = useState(false);
-  const [top, setTop] = useState(null);
-  const [transform, setTransform] = useState(null);
-  const [imgSrc, setImgSrc] = useState(null);
+  const [top, setTop] = useState(`CALC(50% - ${boardDimensions[1] / 2 + 4}px)`);
+  const [transform, setTransform] = useState(
+    playerType === PLAYER_TYPES.PLAYER_1
+      ? " translate(-35%, -100%)"
+      : " translate(-60%, -100%)"
+  );
+  const [imgSrc, setImgSrc] = useState(
+    playerType === PLAYER_TYPES.PLAYER_1
+      ? PLAYER_CURSORs[9]
+      : PLAYER_CURSORs[10]
+  );
 
   /* { KEY DOWN LISTENER } */
   useEffect(() => {
@@ -261,17 +273,9 @@ const ControllableFingerCursor = ({ playerType }) => {
     }
     /* { TRANSFORM } */
     if (playerType === PLAYER_TYPES.PLAYER_1) {
-      if (playerType === currentTurn) {
-        setTransform(` translate(-35%, -100%) scaleX(1)`);
-      } else {
-        setTransform(` translate(-35%, -100%) scaleX(-1)`);
-      }
+      setTransform(` translate(-35%, -100%)`);
     } else {
-      if (playerType === currentTurn) {
-        setTransform(` translate(-60%, -100%) scaleX(-1)`);
-      } else {
-        setTransform(` translate(-60%, -100%) scaleX(1)`);
-      }
+      setTransform(` translate(-60%, -100%)`);
     }
     /* { IMG } */
     if (gameStatus !== GAME_STATUS.IN_PROGRESS) {
@@ -305,6 +309,8 @@ const ControllableFingerCursor = ({ playerType }) => {
           width: BOX_SIZE,
           userSelect: "none",
           pointerEvents: "none",
+          border: "0px solid #FF0000",
+          outline: "none",
         }}
       />
     </div>
@@ -324,10 +330,24 @@ const UncontrollableFingerCursor = ({ playerType }) => {
 
   const [pointingColumn, setPointingColumn] = useState(0);
   const [isCursorDown, setIsCursorDown] = useState(false);
-  const [top, setTop] = useState(null);
-  const [left, setLeft] = useState(null);
-  const [transform, setTransform] = useState(null);
-  const [imgSrc, setImgSrc] = useState(null);
+  const [top, setTop] = useState(`CALC(50% - ${boardDimensions[1] / 2 + 4}px)`);
+  const [left, setLeft] = useState(
+    `CALC(50% - ${
+      boardDimensions[0] / 2 -
+      (BOARD_BORDER + (1 / 2) * BOX_SIZE) -
+      pointingColumn * BOX_SIZE
+    }px)`
+  );
+  const [transform, setTransform] = useState(
+    playerType === PLAYER_TYPES.PLAYER_1
+      ? ` translate(-35%, -100%)`
+      : ` translate(-60%, -100%)`
+  );
+  const [imgSrc, setImgSrc] = useState(
+    playerType === PLAYER_TYPES.PLAYER_1
+      ? PLAYER_CURSORs[9]
+      : PLAYER_CURSORs[10]
+  );
 
   /* { REQUEST MOVEMENT WHEN SELF TURN } */
   useEffect(() => {
@@ -400,17 +420,9 @@ const UncontrollableFingerCursor = ({ playerType }) => {
     }
     /* { TRANSFORM } */
     if (playerType === PLAYER_TYPES.PLAYER_1) {
-      if (playerType === currentTurn) {
-        setTransform(` translate(-35%, -100%) scaleX(1)`);
-      } else {
-        setTransform(` translate(-35%, -100%) scaleX(-1)`);
-      }
+      setTransform(` translate(-35%, -100%)`);
     } else {
-      if (playerType === currentTurn) {
-        setTransform(` translate(-60%, -100%) scaleX(-1)`);
-      } else {
-        setTransform(` translate(-60%, -100%) scaleX(1)`);
-      }
+      setTransform(` translate(-60%, -100%)`);
     }
     /* { IMG } */
     if (gameStatus !== GAME_STATUS.IN_PROGRESS) {
@@ -440,6 +452,7 @@ const UncontrollableFingerCursor = ({ playerType }) => {
           width: BOX_SIZE,
           userSelect: "none",
           pointerEvents: "none",
+          outline: "none",
         }}
       />
     </div>
@@ -550,7 +563,7 @@ const ConnectXBoard = () => {
   const [lastChecker, setLastChecker] = useState(null);
   const [boardDimensions, setBoardDimensions] = useState([0, 0]);
   const [currentTurn, setCurrentTurn] = useState(PLAYER_TYPES.PLAYER_1);
-  const [gameStatus, setGameStatus] = useState(GAME_STATUS.IN_PROGRESS);
+  const [gameStatus, setGameStatus] = useState(GAME_STATUS.PAUSE);
 
   /* { BOARD DIMENSIONS UPDATER } */
   useEffect(() => {
