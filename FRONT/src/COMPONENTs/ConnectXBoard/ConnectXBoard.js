@@ -3,6 +3,8 @@ import axios from "axios";
 
 import { GlobalContexts } from "../../CONTEXTs/GlobalContexts";
 import { ConnectXBoardContexts } from "../../CONTEXTs/ConnectXBoardContexts";
+
+import { GLOABL_COLOR_MANAGER } from "../../CONSTs/GlobalColorManager";
 /* IMGs ---------------------------------------------------------------------------------------------- IMG */
 import BOX_DARK from "./IMGs/board_box_dark_theme.svg";
 import BOX_LIGHT from "./IMGs/board_box_light_theme.svg";
@@ -18,6 +20,18 @@ import player_2_finger_snap_dark_theme from "./IMGs/player_2_finger_snap_dark_th
 import player_2_finger_crown_dark_theme from "./IMGs/player_2_finger_crown_dark_theme.png";
 import player_2_finger_death_dark_theme from "./IMGs/player_2_finger_death_dark_theme.png";
 import player_2_finger_love_dark_theme from "./IMGs/player_2_finger_love_dark_theme.png";
+
+import player_1_finger_cursor_light_theme from "./IMGs/player_1_finger_cursor_light_theme.png";
+import player_1_finger_snap_light_theme from "./IMGs/player_1_finger_snap_light_theme.png";
+import player_1_finger_crown_light_theme from "./IMGs/player_1_finger_crown_light_theme.png";
+import player_1_finger_death_light_theme from "./IMGs/player_1_finger_death_light_theme.png";
+import player_1_finger_love_light_theme from "./IMGs/player_1_finger_love_light_theme.png";
+
+import player_2_finger_cursor_light_theme from "./IMGs/player_2_finger_cursor_light_theme.png";
+import player_2_finger_snap_light_theme from "./IMGs/player_2_finger_snap_light_theme.png";
+import player_2_finger_crown_light_theme from "./IMGs/player_2_finger_crown_light_theme.png";
+import player_2_finger_death_light_theme from "./IMGs/player_2_finger_death_light_theme.png";
+import player_2_finger_love_light_theme from "./IMGs/player_2_finger_love_light_theme.png";
 
 import { RiPlayLine, RiPauseLine } from "@remixicon/react";
 /* IMGs -------------------------------------------------------------------------------------------------- */
@@ -53,10 +67,8 @@ const GAME_STATUS = {
   IN_PROGRESS: 3,
   PAUSE: 4,
 };
-const CHECKER_COLORS = {
-  PLAYER_1: "#8C8C8C",
-  PLAYER_2: "#494949",
-};
+const DARK_THEME = GLOABL_COLOR_MANAGER().DARK_THEME;
+const LIGHT_THEME = GLOABL_COLOR_MANAGER().LIGHT_THEME;
 const AGENT_TYPES = ["HUMAN", "RANDOM", "GREEDY", "MINMAX", "MONTE_CARLO"];
 /* { ICONs } */
 const PLAYER_CURSORs = {
@@ -70,6 +82,17 @@ const PLAYER_CURSORs = {
   8: player_2_finger_death_dark_theme,
   9: player_1_finger_love_dark_theme,
   10: player_2_finger_love_dark_theme,
+
+  11: player_1_finger_cursor_light_theme,
+  12: player_2_finger_cursor_light_theme,
+  13: player_1_finger_snap_light_theme,
+  14: player_2_finger_snap_light_theme,
+  15: player_1_finger_crown_light_theme,
+  16: player_2_finger_crown_light_theme,
+  17: player_1_finger_death_light_theme,
+  18: player_2_finger_death_light_theme,
+  19: player_1_finger_love_light_theme,
+  20: player_2_finger_love_light_theme,
 };
 /* CONST ------------------------------------------------------------------------------------------------- */
 
@@ -153,7 +176,11 @@ const BoardColumns = () => {
       style={{
         position: "absolute",
         border:
-          BOARD_BORDER + "px solid " + (underDarkTheme ? "#1E1E1E" : "#D9D9D9"),
+          BOARD_BORDER +
+          "px solid " +
+          (underDarkTheme
+            ? DARK_THEME.deep_hidden_forground
+            : LIGHT_THEME.deep_hidden_forground),
         top: "50%",
         left: "50%",
         transform: "translate(-50%, -50%)",
@@ -169,6 +196,7 @@ const BoardColumns = () => {
 };
 /* { CUROSR FINGER } */
 const ControllableFingerCursor = ({ playerType }) => {
+  const { underDarkTheme } = useContext(GlobalContexts);
   const {
     board,
     boardDimensions,
@@ -187,8 +215,8 @@ const ControllableFingerCursor = ({ playerType }) => {
   );
   const [imgSrc, setImgSrc] = useState(
     playerType === PLAYER_TYPES.PLAYER_1
-      ? PLAYER_CURSORs[9]
-      : PLAYER_CURSORs[10]
+      ? PLAYER_CURSORs[underDarkTheme ? 9 : 19]
+      : PLAYER_CURSORs[underDarkTheme ? 10 : 20]
   );
 
   /* { KEY DOWN LISTENER } */
@@ -278,16 +306,23 @@ const ControllableFingerCursor = ({ playerType }) => {
       setTransform(` translate(-60%, -100%)`);
     }
     /* { IMG } */
+    /* { IMG } */
     if (gameStatus !== GAME_STATUS.IN_PROGRESS) {
       if (playerType === gameStatus) {
-        setImgSrc(PLAYER_CURSORs[playerType + 4]);
+        setImgSrc(
+          PLAYER_CURSORs[underDarkTheme ? playerType + 4 : playerType + 14]
+        );
       } else if (3 - playerType === gameStatus) {
-        setImgSrc(PLAYER_CURSORs[playerType + 6]);
+        setImgSrc(
+          PLAYER_CURSORs[underDarkTheme ? playerType + 6 : playerType + 16]
+        );
       }
     } else if (playerType === currentTurn) {
-      setImgSrc(PLAYER_CURSORs[playerType]);
+      setImgSrc(PLAYER_CURSORs[underDarkTheme ? playerType : playerType + 10]);
     } else {
-      setImgSrc(PLAYER_CURSORs[playerType + 2]);
+      setImgSrc(
+        PLAYER_CURSORs[underDarkTheme ? playerType + 2 : playerType + 12]
+      );
     }
   }, [isCursorDown, boardDimensions, currentTurn, pointingColumn]);
 
@@ -317,7 +352,7 @@ const ControllableFingerCursor = ({ playerType }) => {
   );
 };
 const UncontrollableFingerCursor = ({ playerType }) => {
-  const { agent1Type, agent2Type } = useContext(GlobalContexts);
+  const { underDarkTheme, agent1Type, agent2Type } = useContext(GlobalContexts);
   const {
     board,
     inarow,
@@ -345,8 +380,8 @@ const UncontrollableFingerCursor = ({ playerType }) => {
   );
   const [imgSrc, setImgSrc] = useState(
     playerType === PLAYER_TYPES.PLAYER_1
-      ? PLAYER_CURSORs[9]
-      : PLAYER_CURSORs[10]
+      ? PLAYER_CURSORs[underDarkTheme ? 9 : 19]
+      : PLAYER_CURSORs[underDarkTheme ? 10 : 20]
   );
 
   /* { REQUEST MOVEMENT WHEN SELF TURN } */
@@ -427,14 +462,20 @@ const UncontrollableFingerCursor = ({ playerType }) => {
     /* { IMG } */
     if (gameStatus !== GAME_STATUS.IN_PROGRESS) {
       if (playerType === gameStatus) {
-        setImgSrc(PLAYER_CURSORs[playerType + 4]);
+        setImgSrc(
+          PLAYER_CURSORs[underDarkTheme ? playerType + 4 : playerType + 14]
+        );
       } else if (3 - playerType === gameStatus) {
-        setImgSrc(PLAYER_CURSORs[playerType + 6]);
+        setImgSrc(
+          PLAYER_CURSORs[underDarkTheme ? playerType + 6 : playerType + 16]
+        );
       }
     } else if (playerType === currentTurn) {
-      setImgSrc(PLAYER_CURSORs[playerType]);
+      setImgSrc(PLAYER_CURSORs[underDarkTheme ? playerType : playerType + 10]);
     } else {
-      setImgSrc(PLAYER_CURSORs[playerType + 2]);
+      setImgSrc(
+        PLAYER_CURSORs[underDarkTheme ? playerType + 2 : playerType + 12]
+      );
     }
   }, [isCursorDown, boardDimensions, currentTurn, pointingColumn]);
 
@@ -460,19 +501,30 @@ const UncontrollableFingerCursor = ({ playerType }) => {
 };
 /* { CHECKER SUB COMPONENTs } */
 const Checker = ({ checkerType, X, Y }) => {
-  const [checkerColor, setCheckerColor] = useState(CHECKER_COLORS.PLAYER_1);
+  const { underDarkTheme } = useContext(GlobalContexts);
+  const [checkerColor, setCheckerColor] = useState(
+    underDarkTheme ? DARK_THEME.player_1_checker : LIGHT_THEME.player_1_checker
+  );
   useEffect(() => {
     switch (checkerType) {
       case CHECKER_TYPES.PLAYER_1:
-        setCheckerColor(CHECKER_COLORS.PLAYER_1);
+        setCheckerColor(
+          underDarkTheme
+            ? DARK_THEME.player_1_checker
+            : LIGHT_THEME.player_1_checker
+        );
         break;
       case CHECKER_TYPES.PLAYER_2:
-        setCheckerColor(CHECKER_COLORS.PLAYER_2);
+        setCheckerColor(
+          underDarkTheme
+            ? DARK_THEME.player_2_checker
+            : LIGHT_THEME.player_2_checker
+        );
         break;
       default:
         break;
     }
-  }, [checkerType]);
+  }, [checkerType, underDarkTheme]);
 
   return (
     <div
@@ -520,6 +572,7 @@ const CheckersMap = () => {
 };
 /* { PLAY AND PAUSE BUTTON } */
 const PlayAndPauseButton = () => {
+  const { underDarkTheme } = useContext(GlobalContexts);
   const { boardDimensions, gameStatus, setGameStatus, clearBoard } = useContext(
     ConnectXBoardContexts
   );
@@ -543,10 +596,21 @@ const PlayAndPauseButton = () => {
       }}
     >
       {gameStatus !== GAME_STATUS.IN_PROGRESS ? (
-        <RiPlayLine style={{ color: "#494949" }} onClick={handlePlayAndPause} />
+        <RiPlayLine
+          style={{
+            color: underDarkTheme
+              ? DARK_THEME.hidden_forground
+              : LIGHT_THEME.hidden_forground,
+          }}
+          onClick={handlePlayAndPause}
+        />
       ) : (
         <RiPauseLine
-          style={{ color: "#494949" }}
+          style={{
+            color: underDarkTheme
+              ? DARK_THEME.hidden_forground
+              : LIGHT_THEME.hidden_forground,
+          }}
           onClick={handlePlayAndPause}
         />
       )}
@@ -638,13 +702,13 @@ const ConnectXBoard = () => {
     <div
       style={{
         position: "absolute",
-        top: onPage === "GAME" ? "50%" : "-150%",
+        top: onPage === "GAME" ? "50%" : "-50%",
         left: "50%",
         height: "100vh",
         width: "100vw",
         transform: "translate(-50%, -50%)",
         overflow: "hidden",
-        transition: "0.64s cubic-bezier(0.64, -0.16, 0.2, 1.28)",
+        transition: "top 0.64s cubic-bezier(0.64, -0.16, 0.2, 1.28)",
       }}
     >
       <ConnectXBoardContexts.Provider

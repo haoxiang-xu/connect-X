@@ -26,7 +26,7 @@ const Agent1Select = () => {
       }}
     >
       <CustomizedSelect
-        prefix={"AGENT 1"}
+        prefix={"PLAYER 1"}
         options={["HUMAN", "RANDOM", "GREEDY", "MINMAX", "MONTE_CARLO"]}
         selectedOption={agent1Type}
         setSelectedOption={setAgent1Type}
@@ -47,7 +47,7 @@ const Agent2Select = () => {
       }}
     >
       <CustomizedSelect
-        prefix={"AGENT 2"}
+        prefix={"PLAYER 2"}
         options={["HUMAN", "RANDOM", "GREEDY", "MINMAX", "MONTE_CARLO"]}
         selectedOption={agent2Type}
         setSelectedOption={setAgent2Type}
@@ -90,7 +90,7 @@ const ConnectXSettingMenu = () => {
         height: "100vh",
         width: "100vw",
         transform: "translate(-50%, -50%)",
-        transition: "0.64s cubic-bezier(0.64, -0.16, 0.2, 1.28)",
+        transition: "color 0.16s, top 0.64s cubic-bezier(0.32, -0.16, 0.2, 1.28)",
       }}
     >
       <RiSettingsLine
@@ -102,9 +102,9 @@ const ConnectXSettingMenu = () => {
           height: "20px",
           width: "20px",
           color: underDarkTheme
-            ? DARK_THEME.onhover_forground
-            : LIGHT_THEME.onhover_forground,
-          transition: "0.64s cubic-bezier(0.64, -0.16, 0.2, 1.28)",
+            ? DARK_THEME.hidden_forground
+            : LIGHT_THEME.hidden_forground,
+            transition: "color 0.16s, top 0.64s cubic-bezier(0.32, -0.16, 0.2, 1.28)",
         }}
         onClick={() => setOnPage("SETTING")}
       />
@@ -118,9 +118,9 @@ const ConnectXSettingMenu = () => {
           height: "20px",
           width: "20px",
           color: underDarkTheme
-            ? DARK_THEME.onhover_forground
-            : LIGHT_THEME.onhover_forground,
-          transition: "0.64s cubic-bezier(0.32, -0.16, 0.2, 1.28)",
+            ? DARK_THEME.hidden_forground
+            : LIGHT_THEME.hidden_forground,
+          transition: "color 0.16s, top 0.64s cubic-bezier(0.32, -0.16, 0.2, 1.28)",
         }}
         onClick={() => setOnPage("GAME")}
       />
