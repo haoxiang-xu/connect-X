@@ -324,7 +324,7 @@ const ControllableFingerCursor = ({ playerType }) => {
         PLAYER_CURSORs[underDarkTheme ? playerType + 2 : playerType + 12]
       );
     }
-  }, [isCursorDown, boardDimensions, currentTurn, pointingColumn]);
+  }, [isCursorDown, boardDimensions, currentTurn, pointingColumn, underDarkTheme]);
 
   return (
     <div>
@@ -477,7 +477,7 @@ const UncontrollableFingerCursor = ({ playerType }) => {
         PLAYER_CURSORs[underDarkTheme ? playerType + 2 : playerType + 12]
       );
     }
-  }, [isCursorDown, boardDimensions, currentTurn, pointingColumn]);
+  }, [isCursorDown, boardDimensions, currentTurn, pointingColumn, underDarkTheme]);
 
   return (
     <div>
