@@ -763,6 +763,7 @@ def request_agent_movement():
     data = request.get_json()
     board = np.array(data['board'])
     player_type = data['player']
+    agent_type = data['agent']
     inarow = data['inarow']
     
     configuration = SimpleNamespace(
@@ -778,7 +779,7 @@ def request_agent_movement():
     C = ConnectX(inarow = configuration.inarow, board = observation.board, turn = observation.mark)
     C.print()
     
-    agent = Agent('MONTE_CARLO')
+    agent = Agent(agent_type)
     column = agent.move(observation, configuration)
     
     return jsonify({'column': column})

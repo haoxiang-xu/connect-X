@@ -27,7 +27,7 @@ const Agent1Select = () => {
     >
       <CustomizedSelect
         prefix={"AGENT 1"}
-        options={["HUMAN", "RANDOM", "GREEDY", "MINMAX", "MONTE CARLO SEARCH"]}
+        options={["HUMAN", "RANDOM", "GREEDY", "MINMAX", "MONTE CARLO"]}
         selectedOption={agent1Type}
         setSelectedOption={setAgent1Type}
       />
@@ -47,8 +47,8 @@ const Agent2Select = () => {
       }}
     >
       <CustomizedSelect
-        prefix={"AGENT 1"}
-        options={["HUMAN", "RANDOM", "GREEDY", "MINMAX", "MONTE CARLO SEARCH"]}
+        prefix={"AGENT 2"}
+        options={["HUMAN", "RANDOM", "GREEDY", "MINMAX", "MONTE CARLO"]}
         selectedOption={agent2Type}
         setSelectedOption={setAgent2Type}
       />

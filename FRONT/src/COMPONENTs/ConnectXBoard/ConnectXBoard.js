@@ -55,6 +55,7 @@ const CHECKER_COLORS = {
   PLAYER_1: "#8C8C8C",
   PLAYER_2: "#494949",
 };
+const AGENT_TYPES = ["HUMAN", "RANDOM", "GREEDY", "MINMAX", "MONTE_CARLO"];
 /* { ICONs } */
 const PLAYER_CURSORs = {
   1: player_1_finger_cursor_dark_theme,
@@ -69,7 +70,7 @@ const PLAYER_CURSORs = {
 /* CONST ------------------------------------------------------------------------------------------------- */
 
 /* FETCH =========================================================================================== FETCH */
-const requestMovement = async (board, playerType, inarow) => {
+const requestMovement = async (board, playerType, agentType, inarow) => {
   try {
     const response = await axios.post(
       "http://localhost:5000/request_agent_movement",
@@ -78,6 +79,7 @@ const requestMovement = async (board, playerType, inarow) => {
           row.map((cell) => (cell === 1 ? 1 : cell === 2 ? 2 : 0))
         ),
         player: playerType,
+        agent: agentType,
         inarow: inarow,
       }
     );
@@ -340,6 +342,7 @@ const UncontrollableFingerCursor = ({ playerType }) => {
           agentPointingColumn = await requestMovement(
             board,
             playerType,
+            "MONTE_CARLO",
             inarow
           );
         }
@@ -500,8 +503,9 @@ const CheckersMap = () => {
 };
 /* { PLAY AND PAUSE BUTTON } */
 const PlayAndPauseButton = () => {
-  const { boardDimensions, gameStatus, setGameStatus, clearBoard } =
-    useContext(ConnectXBoardContexts);
+  const { boardDimensions, gameStatus, setGameStatus, clearBoard } = useContext(
+    ConnectXBoardContexts
+  );
   const handlePlayAndPause = () => {
     if (gameStatus === GAME_STATUS.IN_PROGRESS) {
       setGameStatus(GAME_STATUS.PAUSE);
@@ -535,7 +539,7 @@ const PlayAndPauseButton = () => {
 /* SUB COMPONENTS ---------------------------------------------------------------------------------------- */
 
 const ConnectXBoard = () => {
-  const { onPage } = useContext(GlobalContexts); 
+  const { onPage } = useContext(GlobalContexts);
 
   const [board, setBoard] = useState(EMPTY_BOARD);
   const [inarow, setInarow] = useState(4);
