@@ -1,8 +1,14 @@
-const DRAK_THEME = {
-  background: "#181818",
-  forground: "#1E1E1E",
-  major_player_checker_color: "#8C8C8C",
-  secondary_player_checker_color: "#494949",
-};
+export const GLOABL_COLOR_MANAGER = () => {
+  const DARK_THEME = {
+    onhover_forground: "#494949",
+    hidden_forground: "#383838",
+    background: "#181818",
+  };
+  const LIGHT_THEME = {
+    onhover_forground: "#FFFFFF",
+    hidden_forground: "#D9D9D9",
+    background: "#A59E95",
+  };
 
-export { DRAK_THEME };
+  return { DARK_THEME: DARK_THEME, LIGHT_THEME: LIGHT_THEME };
+};

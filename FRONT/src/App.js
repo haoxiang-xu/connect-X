@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { GlobalContexts } from "./CONTEXTs/GlobalContexts";
 
 import ConnectXGameDataManager from "./DATA_MANAGERs/ConnectXGameDataManager";
+import ConnectXSystemSettingMenu from "./COMPONENTs/ConnectXSettingMenu/ConnectXSettingMenu";
 
 const App = () => {
   const [underDarkTheme, setUnderDarkTheme] = useState(true);
@@ -25,6 +26,10 @@ const App = () => {
         <Router>
           <Routes>
             <Route path="/" element={<ConnectXGameDataManager />} />
+            <Route
+              path="/system-setting"
+              element={<ConnectXSystemSettingMenu />}
+            />
           </Routes>
         </Router>
       </GlobalContexts.Provider>

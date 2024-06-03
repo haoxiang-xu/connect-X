@@ -500,17 +500,18 @@ const CheckersMap = () => {
 };
 /* { PLAY AND PAUSE BUTTON } */
 const PlayAndPauseButton = () => {
-  const { boardDimensions, gameStatus, setGameStatus } = useContext(
-    ConnectXBoardContexts
-  );
-
+  const { boardDimensions, gameStatus, setGameStatus, clearBoard } =
+    useContext(ConnectXBoardContexts);
   const handlePlayAndPause = () => {
     if (gameStatus === GAME_STATUS.IN_PROGRESS) {
       setGameStatus(GAME_STATUS.PAUSE);
     } else if (gameStatus === GAME_STATUS.PAUSE) {
       setGameStatus(GAME_STATUS.IN_PROGRESS);
+    } else {
+      clearBoard();
     }
   };
+
   return (
     <div
       style={{
@@ -603,9 +604,25 @@ const ConnectXBoard = () => {
       }
     }
   };
+  /* { CLEAR BOARD } */
+  const clearBoard = () => {
+    setBoard(EMPTY_BOARD);
+    setCurrentTurn(PLAYER_TYPES.PLAYER_1);
+    setGameStatus(GAME_STATUS.IN_PROGRESS);
+  };
 
   return (
-    <div>
+    <div
+      style={{
+        position: "absolute",
+        top: "50%",
+        left: "50%",
+        height: "100vh",
+        width: "100vw",
+        transform: "translate(-50%, -50%)",
+        overflow: "hidden",
+      }}
+    >
       <ConnectXBoardContexts.Provider
         value={{
           board,
@@ -622,6 +639,7 @@ const ConnectXBoard = () => {
           setCurrentTurn,
           handleDropOnColumn,
           checkColumnAvailability,
+          clearBoard,
         }}
       >
         <BoardColumns />

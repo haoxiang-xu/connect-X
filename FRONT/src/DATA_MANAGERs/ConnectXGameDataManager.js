@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState, useContext } from "react";
 
 import ConnectXBoard from "../COMPONENTs/ConnectXBoard/ConnectXBoard";
-import ThemeSwitch from "../COMPONENTs/ThemeSwitch/ThemeSwitch";
+import ConnectXSettingMenu from "../COMPONENTs/ConnectXSettingMenu/ConnectXSettingMenu";
 
 const ConnectXGameDataManager = () => {
   return (

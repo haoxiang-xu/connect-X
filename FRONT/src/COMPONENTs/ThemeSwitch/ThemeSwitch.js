@@ -3,22 +3,17 @@ import React, { useEffect, useState } from "react";
 import { GlobalContexts } from "../../CONTEXTs/GlobalContexts";
 import { ThemeSwitchContexts } from "../../CONTEXTs/ThemeSwitchContexts";
 
+import { GLOABL_COLOR_MANAGER } from "../../CONSTs/GlobalColorManager";
+
 import { RiMoonFill, RiSunFill } from "@remixicon/react";
 
 /* CONSTs --------------------------------------------------------------------------------------- CONSTs */
 const SWITCH_DIMENSIONS = { height: 32, width: 50 };
 const TOGGLE_SIZE = 26;
-const ICON_SIZE = 22;
+const ICON_SIZE = 18;
 /* { COLORs } */
-const COLORs = {
-  dark_theme_onhover_forground: "#494949",
-  dark_theme_hidden_forground: "#1E1E1E",
-  darK_theme_background: "#181818",
-
-  light_theme_onhover_forground: "#C6C6C6",
-  light_theme_hidden_forground: "#D9D9D9",
-  light_theme_background: "#F2F2F2",
-};
+const DARK_THEME = GLOABL_COLOR_MANAGER().DARK_THEME;
+const LIGHT_THEME = GLOABL_COLOR_MANAGER().LIGHT_THEME;
 /* CONSTs ---------------------------------------------------------------------------------------------- */
 
 /* SUB COMPONENTs ----------------------------------------------------------------------- SUB COMPONENTs */
@@ -31,15 +26,11 @@ const Toggle = () => {
   useEffect(() => {
     if (underDarkTheme) {
       setToggleColor(
-        isOnHover
-          ? COLORs.dark_theme_onhover_forground
-          : COLORs.dark_theme_hidden_forground
+        isOnHover ? DARK_THEME.onhover_forground : DARK_THEME.hidden_forground
       );
     } else {
       setToggleColor(
-        isOnHover
-          ? COLORs.light_theme_onhover_forground
-          : COLORs.light_theme_hidden_forground
+        isOnHover ? LIGHT_THEME.onhover_forground : LIGHT_THEME.hidden_forground
       );
     }
   }, [isOnHover, underDarkTheme]);
@@ -59,7 +50,6 @@ const Toggle = () => {
           height: TOGGLE_SIZE + "px",
           width: TOGGLE_SIZE + "px",
           backgroundColor: toggleColor,
-          borderRadius: "24px",
           transition: "0.16s",
           overflow: "hidden",
         }}
@@ -67,26 +57,26 @@ const Toggle = () => {
         <RiMoonFill
           style={{
             position: "absolute",
-            top: "2px",
-            left: underDarkTheme ? "2px" : "-32px",
+            top: "4.25px",
+            left: underDarkTheme ? "4px" : "-32px",
             height: ICON_SIZE + "px",
             width: ICON_SIZE + "px",
             color: underDarkTheme
-              ? COLORs.darK_theme_background
-              : COLORs.light_theme_background,
+              ? DARK_THEME.background
+              : LIGHT_THEME.background,
             transition: "0.16s",
           }}
         />
         <RiSunFill
           style={{
             position: "absolute",
-            top: "2px",
-            left: underDarkTheme ? "36px" : "2px",
+            top: "4.25px",
+            left: underDarkTheme ? "36px" : "4px",
             height: ICON_SIZE + "px",
             width: ICON_SIZE + "px",
             color: underDarkTheme
-              ? COLORs.darK_theme_background
-              : COLORs.light_theme_background,
+              ? DARK_THEME.background
+              : LIGHT_THEME.background,
             transition: "0.16s",
           }}
         />
@@ -105,23 +95,24 @@ const ThemeSwitch = () => {
 
   useEffect(() => {
     document.body.style.backgroundColor = underDarkTheme
-      ? COLORs.darK_theme_background
-      : "#F2F2F2";
+      ? DARK_THEME.background
+      : LIGHT_THEME.background;
+    document.body.style.transition = "0.16s";
   }, [underDarkTheme]);
   /* { STYLE } */
   useEffect(() => {
     /* { SWITCH BORDER } */
     if (underDarkTheme) {
       if (isOnHover) {
-        setBoard("3px solid " + COLORs.dark_theme_onhover_forground);
+        setBoard("3px solid " + DARK_THEME.onhover_forground);
       } else {
-        setBoard("3px solid " + COLORs.dark_theme_hidden_forground);
+        setBoard("3px solid " + DARK_THEME.hidden_forground);
       }
     } else {
       if (isOnHover) {
-        setBoard("3px solid " + COLORs.light_theme_onhover_forground);
+        setBoard("3px solid " + LIGHT_THEME.onhover_forground);
       } else {
-        setBoard("3px solid " + COLORs.light_theme_hidden_forground);
+        setBoard("3px solid " + LIGHT_THEME.hidden_forground);
       }
     }
   }, [isOnHover, underDarkTheme]);
@@ -130,12 +121,11 @@ const ThemeSwitch = () => {
     <div
       style={{
         position: "absolute",
-        bottom: "8px",
-        right: "8px",
+        bottom: "0px",
+        right: "0px",
         height: SWITCH_DIMENSIONS.height + "px",
         width: SWITCH_DIMENSIONS.width + "px",
         border: border,
-        borderRadius: "32px",
         transition: "0.16s",
       }}
       onMouseEnter={() => setIsOnHover(true)}
