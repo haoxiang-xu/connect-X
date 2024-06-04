@@ -93,6 +93,8 @@ const OptionList = ({
   const [selectedOptionTextColor, setSelectedOptionTextColor] = useState(null);
   const [selectedOptionZIndex, setSelectedOptionZIndex] = useState(null);
   const [selectedOptionHeight, setSelectedOptionHeight] = useState(null);
+  const [selectedOptionOnHoverIndex, setSelectedOptionOnHoverIndex] =
+    useState(-1);
 
   const optionOnClick = (e, option) => {
     e.stopPropagation();
@@ -160,6 +162,7 @@ const OptionList = ({
         overflowY: options.length > 4 ? "scroll" : "hidden",
         zIndex: selectedOptionZIndex,
       }}
+      onMouseLeave={() => setSelectedOptionOnHoverIndex(-1)}
     >
       {options.map((option, index) => (
         <div
@@ -179,12 +182,18 @@ const OptionList = ({
             color: underDarkTheme
               ? DARK_THEME.hidden_forground
               : LIGHT_THEME.hidden_forground,
-            backgroundColor: selectedOption === option ? color : "transparent",
+            backgroundColor:
+              selectedOption === option
+                ? color
+                : index === selectedOptionOnHoverIndex
+                ? color + "32"
+                : "transparent",
             transition: "0.16s",
             userSelect: "none",
             cursor: "pointer",
           }}
           onClick={(e) => optionOnClick(e, option)}
+          onMouseEnter={() => setSelectedOptionOnHoverIndex(index)}
         >
           <span
             style={{
