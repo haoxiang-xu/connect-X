@@ -15,7 +15,8 @@ const LIGHT_THEME = GLOABL_COLOR_MANAGER().LIGHT_THEME;
 /* SUB COMPONENTs ----------------------------------------------------------------- SUB COMPONENTs */
 /* { AGENT 1 SELECT } */
 const Agent1Select = () => {
-  const { agent1Type, setAgent1Type } = useContext(GlobalContexts);
+  const { agent1Type, setAgent1Type, underDarkTheme } =
+    useContext(GlobalContexts);
 
   return (
     <div
@@ -30,13 +31,19 @@ const Agent1Select = () => {
         options={["HUMAN", "RANDOM", "GREEDY", "MINMAX", "MONTE_CARLO"]}
         selectedOption={agent1Type}
         setSelectedOption={setAgent1Type}
+        onHoverColor={
+          underDarkTheme
+            ? DARK_THEME.player_1_checker
+            : LIGHT_THEME.player_1_checker
+        }
       />
     </div>
   );
 };
 /* { AGENT 2 SELECT } */
 const Agent2Select = () => {
-  const { agent2Type, setAgent2Type } = useContext(GlobalContexts);
+  const { agent2Type, setAgent2Type, underDarkTheme } =
+    useContext(GlobalContexts);
 
   return (
     <div
@@ -51,6 +58,11 @@ const Agent2Select = () => {
         options={["HUMAN", "RANDOM", "GREEDY", "MINMAX", "MONTE_CARLO"]}
         selectedOption={agent2Type}
         setSelectedOption={setAgent2Type}
+        onHoverColor={
+          underDarkTheme
+            ? DARK_THEME.player_2_checker
+            : LIGHT_THEME.player_2_checker
+        }
       />
     </div>
   );

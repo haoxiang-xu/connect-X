@@ -119,18 +119,14 @@ const OptionList = ({
         };
       }
       ::-webkit-scrollbar-thumb:hover {
-        background: ${
-          underDarkTheme
-            ? DARK_THEME.onhover_forground
-            : LIGHT_THEME.onhover_forground
-        };
+        background: ${color};
       }
     `;
     document.head.appendChild(style);
     return () => {
       document.head.removeChild(style);
     };
-  }, [underDarkTheme]);
+  }, [underDarkTheme, color]);
   useEffect(() => {
     if (isExpanded) {
       setSelectedOptionZIndex("1");
@@ -220,6 +216,7 @@ const CustomizedSelect = ({
   options,
   selectedOption,
   setSelectedOption,
+  onHoverColor,
 }) => {
   const { underDarkTheme } = React.useContext(GlobalContexts);
   const SelectRef = useRef(null);
@@ -233,16 +230,26 @@ const CustomizedSelect = ({
     /* { SWITCH BORDER } */
     if (underDarkTheme) {
       if (isOnHover) {
-        setBoard("3px solid " + DARK_THEME.onhover_forground);
-        setColor(DARK_THEME.onhover_forground);
+        if (onHoverColor) {
+          setBoard("3px solid " + onHoverColor);
+          setColor(onHoverColor);
+        } else {
+          setBoard("3px solid " + DARK_THEME.onhover_forground);
+          setColor(DARK_THEME.onhover_forground);
+        }
       } else {
         setBoard("3px solid " + DARK_THEME.hidden_forground);
         setColor(DARK_THEME.hidden_forground);
       }
     } else {
       if (isOnHover) {
-        setBoard("3px solid " + LIGHT_THEME.onhover_forground);
-        setColor(LIGHT_THEME.onhover_forground);
+        if (onHoverColor) {
+          setBoard("3px solid " + onHoverColor);
+          setColor(onHoverColor);
+        } else {
+          setBoard("3px solid " + LIGHT_THEME.onhover_forground);
+          setColor(LIGHT_THEME.onhover_forground);
+        }
       } else {
         setBoard("3px solid " + LIGHT_THEME.hidden_forground);
         setColor(LIGHT_THEME.hidden_forground);

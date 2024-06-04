@@ -9,6 +9,8 @@ import { GLOABL_COLOR_MANAGER } from "../../CONSTs/GlobalColorManager";
 import BOX_DARK from "./IMGs/board_box_dark_theme.svg";
 import BOX_LIGHT from "./IMGs/board_box_light_theme.svg";
 
+import invisible from "./IMGs/invisible.png";
+
 import player_1_finger_cursor_dark_theme from "./IMGs/player_1_finger_cursor_dark_theme.png";
 import player_1_finger_snap_dark_theme from "./IMGs/player_1_finger_snap_dark_theme.png";
 import player_1_finger_crown_dark_theme from "./IMGs/player_1_finger_crown_dark_theme.png";
@@ -32,6 +34,9 @@ import player_2_finger_snap_light_theme from "./IMGs/player_2_finger_snap_light_
 import player_2_finger_crown_light_theme from "./IMGs/player_2_finger_crown_light_theme.png";
 import player_2_finger_death_light_theme from "./IMGs/player_2_finger_death_light_theme.png";
 import player_2_finger_love_light_theme from "./IMGs/player_2_finger_love_light_theme.png";
+
+import players_draw_dark_theme from "./IMGs/players_draw_dark_theme.png";
+import players_draw_light_theme from "./IMGs/players_draw_light_theme.png";
 
 import { RiPlayLine, RiPauseLine, RiRefreshLine } from "@remixicon/react";
 /* IMGs -------------------------------------------------------------------------------------------------- */
@@ -72,6 +77,7 @@ const LIGHT_THEME = GLOABL_COLOR_MANAGER().LIGHT_THEME;
 const AGENT_TYPES = ["HUMAN", "RANDOM", "GREEDY", "MINMAX", "MONTE_CARLO"];
 /* { ICONs } */
 const PLAYER_CURSORs = {
+  0: invisible,
   1: player_1_finger_cursor_dark_theme,
   2: player_2_finger_cursor_dark_theme,
   3: player_1_finger_snap_dark_theme,
@@ -93,6 +99,9 @@ const PLAYER_CURSORs = {
   18: player_2_finger_death_light_theme,
   19: player_1_finger_love_light_theme,
   20: player_2_finger_love_light_theme,
+
+  21: players_draw_dark_theme,
+  22: players_draw_light_theme,
 };
 /* CONST ------------------------------------------------------------------------------------------------- */
 
@@ -269,11 +278,13 @@ const ControllableFingerCursor = ({ playerType }) => {
           break;
       }
     };
-    document.addEventListener("keydown", handleKeyDown);
+    if (playerType === currentTurn) {
+      document.addEventListener("keydown", handleKeyDown);
+    }
     return () => {
       document.removeEventListener("keydown", handleKeyDown);
     };
-  }, []);
+  }, [currentTurn]);
   /* { DROP COLUMN WHEN CURSOR DOWN } */
   useEffect(() => {
     if (isCursorDown && playerType === currentTurn) {
@@ -306,16 +317,23 @@ const ControllableFingerCursor = ({ playerType }) => {
       setTransform(` translate(-60%, -100%)`);
     }
     /* { IMG } */
-    /* { IMG } */
     if (gameStatus !== GAME_STATUS.IN_PROGRESS) {
       if (playerType === gameStatus) {
         setImgSrc(
           PLAYER_CURSORs[underDarkTheme ? playerType + 4 : playerType + 14]
         );
       } else if (3 - playerType === gameStatus) {
-        setImgSrc(
-          PLAYER_CURSORs[underDarkTheme ? playerType + 6 : playerType + 16]
-        );
+        setTimeout(() => {
+          setImgSrc(
+            PLAYER_CURSORs[underDarkTheme ? playerType + 6 : playerType + 16]
+          );
+        }, 320);
+      } else if (gameStatus === GAME_STATUS.DRAW) {
+        if (playerType === PLAYER_TYPES.PLAYER_1) {
+          setImgSrc(PLAYER_CURSORs[underDarkTheme ? 21 : 22]);
+        } else {
+          setImgSrc(PLAYER_CURSORs[0]);
+        }
       }
     } else if (playerType === currentTurn) {
       setImgSrc(PLAYER_CURSORs[underDarkTheme ? playerType : playerType + 10]);
@@ -429,11 +447,8 @@ const UncontrollableFingerCursor = ({ playerType }) => {
       handleDropOnColumn(pointingColumn, playerType);
       setTimeout(() => {
         setIsCursorDown(false);
-      }, 128);
+      }, 256);
     }
-    setTimeout(() => {
-      setIsCursorDown(false);
-    }, 256);
   }, [isCursorDown]);
   /* { STYLING } */
   useEffect(() => {
@@ -479,6 +494,18 @@ const UncontrollableFingerCursor = ({ playerType }) => {
             PLAYER_CURSORs[underDarkTheme ? playerType + 6 : playerType + 16]
           );
         }, 320);
+      } else if (gameStatus === GAME_STATUS.DRAW) {
+        if (playerType === PLAYER_TYPES.PLAYER_1) {
+          setImgSrc(PLAYER_CURSORs[underDarkTheme ? 21 : 22]);
+        } else {
+          setImgSrc(PLAYER_CURSORs[0]);
+        }
+      } else {
+        setImgSrc(
+          playerType === PLAYER_TYPES.PLAYER_1
+            ? PLAYER_CURSORs[underDarkTheme ? 9 : 19]
+            : PLAYER_CURSORs[underDarkTheme ? 10 : 20]
+        );
       }
     } else if (playerType === currentTurn) {
       setImgSrc(PLAYER_CURSORs[underDarkTheme ? playerType : playerType + 10]);
