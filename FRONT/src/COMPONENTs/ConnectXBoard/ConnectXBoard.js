@@ -33,7 +33,7 @@ import player_2_finger_crown_light_theme from "./IMGs/player_2_finger_crown_ligh
 import player_2_finger_death_light_theme from "./IMGs/player_2_finger_death_light_theme.png";
 import player_2_finger_love_light_theme from "./IMGs/player_2_finger_love_light_theme.png";
 
-import { RiPlayLine, RiPauseLine } from "@remixicon/react";
+import { RiPlayLine, RiPauseLine, RiRefreshLine } from "@remixicon/react";
 /* IMGs -------------------------------------------------------------------------------------------------- */
 const EMPTY_BOARD = [
   [0, 0, 0, 0, 0, 0, 0],
@@ -474,9 +474,11 @@ const UncontrollableFingerCursor = ({ playerType }) => {
           PLAYER_CURSORs[underDarkTheme ? playerType + 4 : playerType + 14]
         );
       } else if (3 - playerType === gameStatus) {
-        setImgSrc(
-          PLAYER_CURSORs[underDarkTheme ? playerType + 6 : playerType + 16]
-        );
+        setTimeout(() => {
+          setImgSrc(
+            PLAYER_CURSORs[underDarkTheme ? playerType + 6 : playerType + 16]
+          );
+        }, 320);
       }
     } else if (playerType === currentTurn) {
       setImgSrc(PLAYER_CURSORs[underDarkTheme ? playerType : playerType + 10]);
@@ -499,7 +501,8 @@ const UncontrollableFingerCursor = ({ playerType }) => {
         src={imgSrc}
         style={{
           position: "absolute",
-          transition: "left 0.12s ease, top 0.08s ease",
+          transition:
+            "left 0.12s ease, top 0.32s cubic-bezier(0.72, -0.16, 0.2, 1.16)",
           transform: transform,
           top: top,
           left: left,
@@ -641,6 +644,32 @@ const PlayAndPauseButton = () => {
     </div>
   );
 };
+/* { REFRESH BUTTON } */
+const RefreshButton = () => {
+  const { underDarkTheme } = useContext(GlobalContexts);
+  const { boardDimensions, clearBoard } = useContext(ConnectXBoardContexts);
+
+  return (
+    <div
+      style={{
+        position: "absolute",
+        top: `CALC(50% + ${boardDimensions[1] / 2 + 24}px)`,
+        left: "50%",
+        transform: "translate(-50%, 0%)",
+      }}
+    >
+      <RiRefreshLine
+        style={{
+          color: underDarkTheme
+            ? DARK_THEME.hidden_forground
+            : LIGHT_THEME.hidden_forground,
+        }}
+        onClick={clearBoard}
+      />
+    </div>
+  );
+};
+
 /* SUB COMPONENTS ---------------------------------------------------------------------------------------- */
 
 const ConnectXBoard = () => {
@@ -691,6 +720,15 @@ const ConnectXBoard = () => {
     };
     checkGameStatus();
   }, [currentTurn]);
+  /* { RESUME GAME WHEN HUMAN PLAYER } */
+  useEffect(() => {
+    if (
+      (agent1Type === "HUMAN" || agent2Type === "HUMAN") &&
+      gameStatus === GAME_STATUS.PAUSE
+    ) {
+      setGameStatus(GAME_STATUS.IN_PROGRESS);
+    }
+  }, [agent1Type, agent2Type]);
   /* { DROP CHECKERs } */
   const checkColumnAvailability = (columnIndex) => {
     return board[0][columnIndex] === 0;
@@ -766,7 +804,11 @@ const ConnectXBoard = () => {
         ) : (
           <ControllableFingerCursor playerType={PLAYER_TYPES.PLAYER_1} />
         )}
-        <PlayAndPauseButton />
+        {agent1Type === "HUMAN" || agent2Type === "HUMAN" ? (
+          <RefreshButton />
+        ) : (
+          <PlayAndPauseButton />
+        )}
       </ConnectXBoardContexts.Provider>
     </div>
   );
