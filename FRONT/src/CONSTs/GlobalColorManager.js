@@ -14,8 +14,8 @@ export const GLOABL_COLOR_MANAGER = () => {
     deep_hidden_forground: "#E1D7C6",
     background: "#E7DFD1",
 
-    player_1_checker: "#41644A",
-    player_2_checker: "#E86A33",
+    player_1_checker: "#6F4E37",
+    player_2_checker: "#C39898",
   };
 
   return { DARK_THEME: DARK_THEME, LIGHT_THEME: LIGHT_THEME };
