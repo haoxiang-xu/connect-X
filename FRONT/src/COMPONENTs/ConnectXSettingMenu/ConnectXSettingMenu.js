@@ -7,12 +7,24 @@ import { GlobalContexts } from "../../CONTEXTs/GlobalContexts";
 import ThemeSwitch from "../ThemeSwitch/ThemeSwitch";
 import CustomizedSelect from "../../CUSTOMIZED_COMPONENTs/CustomizedSelect/CustomizedSelect";
 
-import { RiSettingsLine, RiArrowDownWideFill } from "@remixicon/react";
+import {
+  RiSettingsLine,
+  RiArrowDownWideFill,
+} from "@remixicon/react";
 
 const DARK_THEME = GLOABL_COLOR_MANAGER().DARK_THEME;
 const LIGHT_THEME = GLOABL_COLOR_MANAGER().LIGHT_THEME;
 
 /* SUB COMPONENTs ----------------------------------------------------------------- SUB COMPONENTs */
+const AGENT_TYPES = [
+  "HUMAN",
+  "RANDOM",
+  "GREEDY",
+  "MINMAX",
+  "MONTE_CARLO",
+  "MINMAX_MONTE_CARLO",
+];
+
 /* { AGENT 1 SELECT } */
 const Agent1Select = () => {
   const { agent1Type, setAgent1Type, underDarkTheme } =
@@ -28,7 +40,7 @@ const Agent1Select = () => {
     >
       <CustomizedSelect
         prefix={"PLAYER 1"}
-        options={["HUMAN", "RANDOM", "GREEDY", "MINMAX", "MONTE_CARLO"]}
+        options={AGENT_TYPES}
         selectedOption={agent1Type}
         setSelectedOption={setAgent1Type}
         onHoverColor={
@@ -55,7 +67,7 @@ const Agent2Select = () => {
     >
       <CustomizedSelect
         prefix={"PLAYER 2"}
-        options={["HUMAN", "RANDOM", "GREEDY", "MINMAX", "MONTE_CARLO"]}
+        options={AGENT_TYPES}
         selectedOption={agent2Type}
         setSelectedOption={setAgent2Type}
         onHoverColor={

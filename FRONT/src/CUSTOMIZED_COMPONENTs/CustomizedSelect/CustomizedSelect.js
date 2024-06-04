@@ -8,6 +8,7 @@ const SELECT_DIMENSIONS = { height: 34 };
 /* { COLORs } */
 const DARK_THEME = GLOABL_COLOR_MANAGER().DARK_THEME;
 const LIGHT_THEME = GLOABL_COLOR_MANAGER().LIGHT_THEME;
+/* { ICONs } */
 /* CONSTs ---------------------------------------------------------------------------------------------- */
 
 /* SUB COMPONENTs ----------------------------------------------------------------------- SUB COMPONENTs */
