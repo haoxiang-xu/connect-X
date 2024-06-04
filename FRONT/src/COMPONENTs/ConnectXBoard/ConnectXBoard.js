@@ -449,6 +449,9 @@ const UncontrollableFingerCursor = ({ playerType }) => {
         setIsCursorDown(false);
       }, 256);
     }
+    setTimeout(() => {
+      setIsCursorDown(false);
+    }, 256);
   }, [isCursorDown]);
   /* { STYLING } */
   useEffect(() => {
