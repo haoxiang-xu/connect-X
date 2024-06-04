@@ -708,9 +708,7 @@ const ConnectXBoard = () => {
         });
         if (gameStatus === GAME_STATUS.IN_PROGRESS) {
           setBoard(newBoard);
-          setTimeout(() => {
-            setCurrentTurn(3 - currentTurn);
-          }, 64);
+          setCurrentTurn(3 - currentTurn);
           setLastChecker({ row, column: columnIndex });
         }
         break;
