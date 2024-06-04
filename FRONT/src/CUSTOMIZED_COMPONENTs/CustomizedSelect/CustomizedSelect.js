@@ -142,7 +142,6 @@ const OptionList = ({
 
   return (
     <div
-      className="customized-option-list-20240603"
       style={{
         position: "absolute",
         top: "100%",
