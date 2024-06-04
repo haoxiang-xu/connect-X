@@ -514,6 +514,10 @@ const UncontrollableFingerCursor = ({ playerType }) => {
 /* { CHECKER SUB COMPONENTs } */
 const Checker = ({ checkerType, X, Y }) => {
   const { underDarkTheme } = useContext(GlobalContexts);
+  const { boardDimensions } = useContext(ConnectXBoardContexts);
+  const [checkerTop, setCheckerTop] = useState(
+    `CALC(50% - ${boardDimensions[1] / 2}px)`
+  );
   const [checkerColor, setCheckerColor] = useState(
     underDarkTheme ? DARK_THEME.player_1_checker : LIGHT_THEME.player_1_checker
   );
@@ -537,12 +541,17 @@ const Checker = ({ checkerType, X, Y }) => {
         break;
     }
   }, [checkerType, underDarkTheme]);
+  useEffect(() => {
+    setTimeout(() => {
+      setCheckerTop(X);
+    }, 64);
+  }, [X]);
 
   return (
     <div
       style={{
         position: "absolute",
-        top: X,
+        top: checkerTop,
         left: Y,
         height: CHECKER_SIZE,
         width: CHECKER_SIZE,
@@ -551,6 +560,7 @@ const Checker = ({ checkerType, X, Y }) => {
         borderRadius: "50%",
         userSelect: "none",
         pointerEvents: "none",
+        transition: "top 0.64s cubic-bezier(0.96, -0.16, 0.2, 1.16)",
       }}
     ></div>
   );
@@ -742,8 +752,8 @@ const ConnectXBoard = () => {
           clearBoard,
         }}
       >
-        <BoardColumns />
         <CheckersMap />
+        <BoardColumns />
         {agent2Type !== "HUMAN" ? (
           <UncontrollableFingerCursor playerType={PLAYER_TYPES.PLAYER_2} />
         ) : (
