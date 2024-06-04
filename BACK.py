@@ -443,7 +443,7 @@ class ConnectX:
     def beta(self):
         monte_carlo_random_385 = self.monte_carlo_random(iteration = 385)
         
-        beta = monte_carlo_random_385 / 100.0
+        beta = monte_carlo_random_385 / 100.0    
         return beta
     
     def monte_carlo_random(self, iteration = 385):
@@ -567,6 +567,8 @@ class Agent:
                 return self.move_greedy(observation, configuration)
             else:
                 return self.move_greedy(observation, configuration, score_calculation_type = greedy_type[1])
+        elif 'MINMAX_MONTE_CARLO' in self.type:
+            return self.move_minmax_monte_carlo(observation, configuration)
         elif 'MINMAX' in self.type:
             minmax_type = self.type.split(' | ')
             if len(minmax_type) == 1:
@@ -753,7 +755,58 @@ class Agent:
                 if score > max_score:
                     max_score = score
                     max_score_column = next_states[index].state_instance.last_checker[1]
-        return max_score_column  
+        return max_score_column     
+    # { MONTE MINMAX CARLO AGENT }
+    def move_minmax_monte_carlo(self, observation, configuration, depth = 3, score_calculation_type = 'beta'):
+        def minmax_search(current_state, depth, inarow, score_calculation_type):
+            if depth == 0:
+                return { 'column': float('-inf'), 'score': current_state.score(score_calculation_type)}
+            
+            next_player = current_state.turn
+            next_states = current_state.next_states(score_calculation_type = 'NONE')
+                        
+            if next_player == current_state.PLAYER1:
+                max_score = -1
+                max_score_column = self.move_random(observation, configuration)
+                for next_state in next_states:
+                    score = minmax_search(next_state.state_instance, depth - 1, inarow, score_calculation_type)['score'] 
+                    current_state_score = next_state.state_instance.score(score_calculation_type) / depth
+                    if current_state_score == 1:
+                        max_score = 1
+                        max_score_column = next_state.state_instance.last_checker[1]
+                        break
+                    else:
+                        score += current_state_score
+                    if score > max_score:
+                        max_score = score
+                        max_score_column = next_state.state_instance.last_checker[1]
+                return { 'column': max_score_column, 'score': max_score }
+            else:
+                min_score = 1
+                min_score_column = self.move_random(observation, configuration)
+                for next_state in next_states:
+                    score = minmax_search(next_state.state_instance, depth - 1, inarow, score_calculation_type)['score'] 
+                    current_state_score = next_state.state_instance.score(score_calculation_type) / depth
+                    if current_state_score == 1:
+                        min_score = -1
+                        min_score_column = next_state.state_instance.last_checker[1]
+                        break
+                    else:
+                        score -= current_state_score
+                    if score < min_score:
+                        min_score = score
+                        min_score_column = next_state.state_instance.last_checker[1]
+                return { 'column': min_score_column, 'score': min_score }
+        
+        columns = configuration.columns
+        rows = configuration.rows
+        inarow = configuration.inarow
+
+        board = observation.board
+        mark = observation.mark
+        
+        current_state = ConnectX(inarow = inarow, board = board, turn = mark)
+        return minmax_search(current_state, depth, inarow, score_calculation_type)['column']
 
 app = Flask(__name__)
 CORS(app)
