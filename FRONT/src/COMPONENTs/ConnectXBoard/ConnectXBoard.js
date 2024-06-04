@@ -281,7 +281,7 @@ const ControllableFingerCursor = ({ playerType }) => {
     }
     setTimeout(() => {
       setIsCursorDown(false);
-    }, 128);
+    }, 256);
   }, [isCursorDown]);
   /* { STYLING } */
   useEffect(() => {
@@ -431,7 +431,9 @@ const UncontrollableFingerCursor = ({ playerType }) => {
         setIsCursorDown(false);
       }, 128);
     }
-    setIsCursorDown(false);
+    setTimeout(() => {
+      setIsCursorDown(false);
+    }, 256);
   }, [isCursorDown]);
   /* { STYLING } */
   useEffect(() => {
@@ -706,7 +708,9 @@ const ConnectXBoard = () => {
         });
         if (gameStatus === GAME_STATUS.IN_PROGRESS) {
           setBoard(newBoard);
-          setCurrentTurn(3 - currentTurn);
+          setTimeout(() => {
+            setCurrentTurn(3 - currentTurn);
+          }, 64);
           setLastChecker({ row, column: columnIndex });
         }
         break;
