@@ -115,11 +115,7 @@ const OptionList = ({
       ::-webkit-scrollbar-track {
       }
       ::-webkit-scrollbar-thumb {
-        background: ${
-          underDarkTheme
-            ? DARK_THEME.hidden_forground
-            : LIGHT_THEME.hidden_forground
-        };
+        background: ${color + "32"};
       }
       ::-webkit-scrollbar-thumb:hover {
         background: ${color};
