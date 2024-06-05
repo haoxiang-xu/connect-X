@@ -814,11 +814,12 @@ CORS(app)
 @app.route('/request_agent_movement', methods=['POST'])
 def request_agent_movement():
     data = request.get_json()
+    
     board = np.array(data['board'])
     player_type = data['player']
     agent_type = data['agent']
     inarow = data['inarow']
-    
+
     configuration = SimpleNamespace(
         columns = board.shape[1],
         rows = board.shape[0],
@@ -870,4 +871,4 @@ def check_state_status():
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=5000)

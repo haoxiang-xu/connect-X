@@ -114,7 +114,8 @@ const requestMovement = async (board, playerType, agentType, inarow) => {
           row.map((cell) => (cell === 1 ? 1 : cell === 2 ? 2 : 0))
         ),
         player: playerType,
-        agent: agentType,
+        agent: String(agentType),
+
         inarow: inarow,
       }
     );
@@ -439,7 +440,7 @@ const UncontrollableFingerCursor = ({ playerType }) => {
         clearTimeout(timeout);
       };
     }
-  }, [currentTurn, gameStatus]);
+  }, [currentTurn, gameStatus, agent1Type, agent2Type]);
   /* { DROP COLUMN WHEN CURSOR DOWN } */
   useEffect(() => {
     if (isCursorDown && gameStatus === GAME_STATUS.IN_PROGRESS) {
