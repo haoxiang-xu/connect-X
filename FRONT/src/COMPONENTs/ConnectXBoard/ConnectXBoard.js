@@ -58,8 +58,6 @@ const CHECKER_TYPES = {
   NONE: 0,
   PLAYER_1: 1,
   PLAYER_2: 2,
-  PLAYER_1_PENDING: 3,
-  PLAYER_2_PENDING: 4,
 };
 const PLAYER_TYPES = {
   PLAYER_1: 1,
@@ -139,6 +137,30 @@ const checkStateStatus = async (board, playerType, inarow, lastChecker) => {
       }
     );
     return response.data.status;
+  } catch (error) {
+    console.error("Error fetching the move from the backend:", error);
+    return null;
+  }
+};
+const requestTheWinningConnection = async (
+  board,
+  playerType,
+  inarow,
+  lastChecker
+) => {
+  try {
+    const response = await axios.post(
+      "http://localhost:5000/request_the_winning_connection",
+      {
+        board: board.map((row) =>
+          row.map((cell) => (cell === 1 ? 1 : cell === 2 ? 2 : 0))
+        ),
+        player: playerType,
+        inarow: inarow,
+        lastChecker: lastChecker,
+      }
+    );
+    return response.data.inarowCheckerPositions;
   } catch (error) {
     console.error("Error fetching the move from the backend:", error);
     return null;
@@ -547,15 +569,18 @@ const UncontrollableFingerCursor = ({ playerType }) => {
   );
 };
 /* { CHECKER SUB COMPONENTs } */
-const Checker = ({ checkerType, X, Y }) => {
+const Checker = ({ checkerType, X, Y, row, col }) => {
   const { underDarkTheme } = useContext(GlobalContexts);
-  const { boardDimensions } = useContext(ConnectXBoardContexts);
+  const { boardDimensions, lastChecker, winningConnection } = useContext(
+    ConnectXBoardContexts
+  );
   const [checkerTop, setCheckerTop] = useState(
     `CALC(50% - ${boardDimensions[1] / 2}px)`
   );
   const [checkerColor, setCheckerColor] = useState(
     underDarkTheme ? DARK_THEME.player_1_checker : LIGHT_THEME.player_1_checker
   );
+  const [checkerBorder, setCheckerBorder] = useState(null);
   useEffect(() => {
     switch (checkerType) {
       case CHECKER_TYPES.PLAYER_1:
@@ -581,6 +606,39 @@ const Checker = ({ checkerType, X, Y }) => {
       setCheckerTop(X);
     }, 64);
   }, [X]);
+  useEffect(() => {
+    const checkPositionInWinningConnection = (row, col, winningConnection) => {
+      for (const [rowIndex, colIndex] of winningConnection) {
+        if (row === rowIndex && col === colIndex) {
+          return true;
+        }
+      }
+      return false;
+    };
+    if (lastChecker !== null) {
+      if (lastChecker.row === row && lastChecker.column === col) {
+        setCheckerBorder(
+          `3px solid ${
+            underDarkTheme
+              ? DARK_THEME.highlight_forground
+              : LIGHT_THEME.highlight_forground
+          }`
+        );
+      } else if (
+        checkPositionInWinningConnection(row, col, winningConnection)
+      ) {
+        setCheckerBorder(
+          `3px solid ${
+            underDarkTheme
+              ? DARK_THEME.highlight_forground
+              : LIGHT_THEME.highlight_forground
+          }`
+        );
+      } else {
+        setCheckerBorder(null);
+      }
+    }
+  }, [lastChecker, underDarkTheme, winningConnection]);
 
   return (
     <div
@@ -593,6 +651,7 @@ const Checker = ({ checkerType, X, Y }) => {
         transform: "translate(-48%, -48%)",
         backgroundColor: checkerColor,
         borderRadius: "50%",
+        border: checkerBorder,
         userSelect: "none",
         pointerEvents: "none",
         transition: "top 0.64s cubic-bezier(0.96, -0.16, 0.2, 1.16)",
@@ -605,10 +664,10 @@ const CheckersMap = () => {
   return (
     <div>
       {board.map((row, rowIndex) =>
-        row.map((box, boxIndex) =>
+        row.map((box, colIndex) =>
           box !== CHECKER_TYPES.NONE ? (
             <Checker
-              key={rowIndex + boxIndex}
+              key={rowIndex + colIndex}
               checkerType={box}
               X={`CALC(50% - ${
                 boardDimensions[1] / 2 -
@@ -618,8 +677,10 @@ const CheckersMap = () => {
               Y={`CALC(50% - ${
                 boardDimensions[0] / 2 -
                 (BOARD_BORDER + (1 / 2) * BOX_SIZE) -
-                boxIndex * BOX_SIZE
+                colIndex * BOX_SIZE
               }px)`}
+              row={rowIndex}
+              col={colIndex}
             />
           ) : null
         )
@@ -711,6 +772,7 @@ const ConnectXBoard = () => {
   const [boardDimensions, setBoardDimensions] = useState([0, 0]);
   const [currentTurn, setCurrentTurn] = useState(PLAYER_TYPES.PLAYER_1);
   const [gameStatus, setGameStatus] = useState(GAME_STATUS.PAUSE);
+  const [winningConnection, setWinningConnection] = useState([]);
 
   /* { BOARD DIMENSIONS UPDATER } */
   useEffect(() => {
@@ -750,6 +812,23 @@ const ConnectXBoard = () => {
     };
     checkGameStatus();
   }, [currentTurn]);
+  useEffect(() => {
+    if (
+      gameStatus === GAME_STATUS.PLAYER_1_WIN ||
+      gameStatus === GAME_STATUS.PLAYER_2_WIN
+    ) {
+      const fetchWinningConnection = async () => {
+        const inarowCheckerPositions = await requestTheWinningConnection(
+          board,
+          gameStatus,
+          inarow,
+          lastChecker
+        );
+        setWinningConnection(inarowCheckerPositions);
+      };
+      fetchWinningConnection();
+    }
+  }, [gameStatus]);
   /* { RESUME GAME WHEN HUMAN PLAYER } */
   useEffect(() => {
     if (
@@ -783,9 +862,37 @@ const ConnectXBoard = () => {
       }
     }
   };
+  /* { INITIALIZE BOARD } */
+  const initializeBoard = (cols, rows, inarow, human_inolved) => {
+    setGameStatus(GAME_STATUS.PAUSE);
+    let new_board = new Array(rows);
+    for (let i = 0; i < rows; i++) {
+      let empty_column = new Array(cols);
+      for (let j = 0; j < cols; j++) {
+        empty_column[j] = 0;
+      }
+      new_board[i] = empty_column;
+    }
+    setBoard(new_board);
+    setInarow(inarow);
+    setWinningConnection([]);
+    setCurrentTurn(PLAYER_TYPES.PLAYER_1);
+    if (human_inolved) {
+      setGameStatus(GAME_STATUS.IN_PROGRESS);
+    }
+  };
   /* { CLEAR BOARD } */
   const clearBoard = () => {
-    setBoard(EMPTY_BOARD);
+    let empty_board = new Array(board.length);
+    for (let i = 0; i < board.length; i++) {
+      let empty_column = new Array(board[0].length);
+      for (let j = 0; j < board[0].length; j++) {
+        empty_column[j] = 0;
+      }
+      empty_board[i] = empty_column;
+    }
+    setBoard(empty_board);
+    setWinningConnection([]);
     setCurrentTurn(PLAYER_TYPES.PLAYER_1);
     setGameStatus(GAME_STATUS.IN_PROGRESS);
   };
@@ -820,6 +927,8 @@ const ConnectXBoard = () => {
           handleDropOnColumn,
           checkColumnAvailability,
           clearBoard,
+          winningConnection,
+          setWinningConnection,
         }}
       >
         <CheckersMap />

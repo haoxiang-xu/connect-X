@@ -17,10 +17,6 @@ const SelectPrefix = ({ prefix, color }) => {
   const { underDarkTheme } = React.useContext(GlobalContexts);
   return (
     <>
-      <link
-        href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;700&display=swap"
-        rel="stylesheet"
-      ></link>
       <span
         style={{
           position: "absolute",
@@ -287,6 +283,10 @@ const CustomizedSelect = ({
       onMouseLeave={() => setIsOnHover(false)}
       onClick={() => setIsExpanded(!isExpanded)}
     >
+      <link
+        href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;700&display=swap"
+        rel="stylesheet"
+      ></link>
       <OptionList
         color={color}
         border={border}

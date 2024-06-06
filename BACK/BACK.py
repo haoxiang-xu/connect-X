@@ -323,6 +323,34 @@ class ConnectX:
             if connection >= longest_connection:
                 longest_connection = connection
         return longest_connection
+    def last_checker_inarow_connection(self):
+        def deep_copy_2d_array(array):
+            return [[array[i][j] for j in range(len(array[0]))] for i in range(len(array))]
+        def check_count_in_a_row_next_position(inarow, row, column, connection_length, direction, inarow_positions):
+            if row < 0 or row >= self.rows or column < 0 or column >= self.columns:
+                return connection_length
+            if self.board[row][column] != 3 - self.turn:
+                return connection_length
+            if connection_length >= inarow:
+                return connection_length
+            inarow_positions.append([row, column])
+            return check_count_in_a_row_next_position(inarow, row + direction[0], column + direction[1], connection_length + 1, direction, inarow_positions)
+        
+        directions = [[0,1], [1,0], [1,1], [1,-1]]
+        longest_connection = 0
+        longest_inarow_positions = []
+        
+        for direction in directions:
+            connection = 1
+            inarow_positions = [[self.last_checker[0], self.last_checker[1]]]
+            connection = check_count_in_a_row_next_position(self.inarow, self.last_checker[0] + direction[0], self.last_checker[1] + direction[1], connection, direction, inarow_positions)
+            connection = check_count_in_a_row_next_position(self.inarow, self.last_checker[0] - direction[0], self.last_checker[1] - direction[1], connection, [-direction[0], -direction[1]], inarow_positions)
+
+            if connection >= longest_connection:
+                longest_connection = connection
+                longest_inarow_positions = deep_copy_2d_array(inarow_positions)
+                
+        return longest_inarow_positions
     
     def last_checker_all_connections(self):
         def check_count_in_a_row_next_position(row, column, connection, direction):
@@ -831,7 +859,6 @@ def request_agent_movement():
     )
     
     C = ConnectX(inarow = configuration.inarow, board = observation.board, turn = observation.mark)
-    C.print()
     
     agent = Agent(agent_type)
     column = agent.move(observation, configuration)
@@ -856,6 +883,7 @@ def check_state_status():
     )
 
     C = ConnectX(inarow = configuration.inarow, board = observation.board, turn = observation.mark, last_checker = [board.shape[0] - 1 - last_checker['row'], last_checker['column']])
+    
     if C.last_checker_longest_connection() >= C.inarow:
         return jsonify({'status': 3 - C.turn})
     
@@ -868,7 +896,31 @@ def check_state_status():
     if is_draw:
         return jsonify({'status': 0})
     return jsonify({'status': 3})
+@app.route('/request_the_winning_connection', methods=['POST'])
+def request_the_winning_connection():
+    data = request.get_json()
+    board = np.array(data['board'])
+    player_type = data['player']
+    inarow = data['inarow']
+    last_checker = data['lastChecker']
+    
+    configuration = SimpleNamespace(
+        columns = board.shape[1],
+        rows = board.shape[0],
+        inarow = inarow
+    )
+    observation = SimpleNamespace(
+        board = board.tolist()[::-1],
+        mark = player_type
+    )
 
+    C = ConnectX(inarow = configuration.inarow, board = observation.board, turn = 3 - observation.mark, last_checker = [board.shape[0] - 1 - last_checker['row'], last_checker['column']])
+    
+    inarow_checker_positions = C.last_checker_inarow_connection()
+    for inarow_checker_position in inarow_checker_positions:
+        inarow_checker_position[0] = board.shape[0] - 1 - inarow_checker_position[0]
+    
+    return jsonify({'inarowCheckerPositions': inarow_checker_positions})
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)

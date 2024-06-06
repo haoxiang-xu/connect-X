@@ -7,10 +7,7 @@ import { GlobalContexts } from "../../CONTEXTs/GlobalContexts";
 import ThemeSwitch from "../ThemeSwitch/ThemeSwitch";
 import CustomizedSelect from "../../CUSTOMIZED_COMPONENTs/CustomizedSelect/CustomizedSelect";
 
-import {
-  RiSettingsLine,
-  RiArrowDownWideFill,
-} from "@remixicon/react";
+import { RiSettingsLine, RiArrowDownWideFill } from "@remixicon/react";
 
 const DARK_THEME = GLOABL_COLOR_MANAGER().DARK_THEME;
 const LIGHT_THEME = GLOABL_COLOR_MANAGER().LIGHT_THEME;
@@ -79,6 +76,70 @@ const Agent2Select = () => {
     </div>
   );
 };
+/* { BOARD DIMENSION SETTING } */
+const BoardDimensionSetting = () => {
+  const { underDarkTheme } = useContext(GlobalContexts);
+  const SETTING_PANEL_SIZE = 64;
+  const [position, setPosition] = useState({
+    x: SETTING_PANEL_SIZE / 2,
+    y: SETTING_PANEL_SIZE / 2,
+  });
+  const [transition, setTransition] = useState("background-color 0.16s");
+
+  const handleMouseMove = (event) => {
+    setTransition("background-color 0.16s");
+    setPosition({
+      x: event.clientX - event.target.getBoundingClientRect().left,
+      y: event.clientY - event.target.getBoundingClientRect().top,
+    });
+  };
+
+  return (
+    <div
+      style={{ position: "absolute", top: "90px" }}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={() => {
+        setPosition({ x: SETTING_PANEL_SIZE / 2, y: SETTING_PANEL_SIZE / 2 });
+        setTransition(
+          "background-color 0.16s, " +
+            "top 0.16s cubic-bezier(0.32, -0.16, 0.2, 1.64), " +
+            "left 0.16s cubic-bezier(0.32, -0.16, 0.2, 1.64)"
+        );
+      }}
+    >
+      <div
+        style={{
+          position: "absolute",
+          top: "0px",
+          height: `${SETTING_PANEL_SIZE}px`,
+          width: `${SETTING_PANEL_SIZE}px`,
+          backgroundColor: underDarkTheme
+            ? DARK_THEME.hidden_forground
+            : LIGHT_THEME.hidden_forground,
+          transition: "0.16s",
+          overflow: "hidden",
+        }}
+      >
+        <div
+          style={{
+            position: "absolute",
+            top: `CALC(50% - ${position.y - SETTING_PANEL_SIZE / 2}px)`,
+            left: `CALC(50% - ${position.x - SETTING_PANEL_SIZE / 2}px)`,
+            transform: "translate(-50%, -50%)",
+            height: "50px",
+            width: "50px",
+            borderRadius: "50px",
+            backgroundColor: underDarkTheme
+              ? DARK_THEME.background
+              : LIGHT_THEME.background,
+            transition: transition,
+            pointerEvents: "none",
+          }}
+        ></div>
+      </div>
+    </div>
+  );
+};
 /* { PANEL } */
 const SettingMenuPanel = () => {
   return (
@@ -97,6 +158,7 @@ const SettingMenuPanel = () => {
       <ThemeSwitch />
       <Agent1Select />
       <Agent2Select />
+      <BoardDimensionSetting />
     </div>
   );
 };

@@ -1,5 +1,6 @@
 export const GLOABL_COLOR_MANAGER = () => {
   const DARK_THEME = {
+    highlight_forground: "#CCCCCC",
     onhover_forground: "#494949",
     hidden_forground: "#383838",
     deep_hidden_forground: "#1E1E1E",
@@ -9,6 +10,7 @@ export const GLOABL_COLOR_MANAGER = () => {
     player_2_checker: "#AB6B1A",
   };
   const LIGHT_THEME = {
+    highlight_forground: "#444037",
     onhover_forground: "#B8AC96",
     hidden_forground: "#C4BBAB",
     deep_hidden_forground: "#E1D7C6",
