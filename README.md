@@ -2,6 +2,8 @@
 
 ## [ About the Project ]
 
+<img width="755" alt="Screenshot 2024-06-06 at 17 12 13" src="https://github.com/haoxiang-xu/connect-X/assets/59581718/4c19a6a5-9768-4d84-8168-bc3b53c4b7b9">
+
 ## [ To Developers ]
 
 ### LOCAL SETUP
