@@ -764,8 +764,15 @@ const RefreshButton = () => {
 /* SUB COMPONENTS ---------------------------------------------------------------------------------------- */
 
 const ConnectXBoard = () => {
-  const { onPage, agent1Type, agent2Type, boardRows, boardColumns, inarow, setInarow } =
-    useContext(GlobalContexts);
+  const {
+    onPage,
+    agent1Type,
+    agent2Type,
+    boardRows,
+    boardColumns,
+    inarow,
+    setInarow,
+  } = useContext(GlobalContexts);
 
   const [board, setBoard] = useState(EMPTY_BOARD);
   const [lastChecker, setLastChecker] = useState(null);
@@ -885,10 +892,10 @@ const ConnectXBoard = () => {
     initializeBoard(
       boardColumns,
       boardRows,
-      4,
+      inarow,
       agent1Type === "HUMAN" || agent2Type === "HUMAN"
     );
-  }, [boardColumns, boardRows]);
+  }, [boardColumns, boardRows, inarow]);
   /* { CLEAR BOARD } */
   const clearBoard = () => {
     let empty_board = new Array(board.length);

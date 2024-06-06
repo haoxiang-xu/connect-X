@@ -6,6 +6,7 @@ import { GlobalContexts } from "../../CONTEXTs/GlobalContexts";
 
 import ThemeSwitch from "../ThemeSwitch/ThemeSwitch";
 import BoardDimensionSettingToggle from "../BoardDimensionSettingToggle/BoardDimensionSettingToggle";
+import BoardInARowSettingSwitch from "../BoardInARowSettingSwitch/BoardInARowSettingSwitch";
 import CustomizedSelect from "../../CUSTOMIZED_COMPONENTs/CustomizedSelect/CustomizedSelect";
 
 import { RiSettingsLine, RiArrowDownWideFill } from "@remixicon/react";
@@ -96,6 +97,7 @@ const SettingMenuPanel = () => {
       <Agent1Select />
       <Agent2Select />
       <BoardDimensionSettingToggle />
+      <BoardInARowSettingSwitch />
     </div>
   );
 };

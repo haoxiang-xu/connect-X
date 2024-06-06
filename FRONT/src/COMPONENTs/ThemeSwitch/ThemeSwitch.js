@@ -50,7 +50,8 @@ const Toggle = () => {
           height: TOGGLE_SIZE + "px",
           width: TOGGLE_SIZE + "px",
           backgroundColor: toggleColor,
-          transition: "0.16s",
+          transition:
+            "background-color 0.16s, left 0.16s cubic-bezier(0.32, -0.64, 0.32, 1.72)",
           overflow: "hidden",
         }}
       >
