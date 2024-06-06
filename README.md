@@ -4,7 +4,7 @@
 
 <img width="316" alt="Screenshot 2024-06-06 at 18 12 42" src="https://github.com/haoxiang-xu/connect-X/assets/59581718/f9a796d9-9470-4d17-ba37-4af3eb666297">
 
-<span style="opacity: 0.32">Dive into the world of ConnectX with our user-friendly web app, designed for everyone to enjoy and explore different game strategies. Whether you're a game enthusiast or just looking for some fun, our platform lets you watch and play against various artificial intelligence (AI) opponents in the ConnectX game. No coding or technical skills required—just play, learn, and have fun!</span>
+<span style="opacity: 0.32">Dive into the world of ConnectX with our user-friendly web app, designed for everyone to enjoy and explore different game strategies. Whether you're a game enthusiast or just looking for some fun, our platform lets you watch and play against various artificial intelligence (AI) opponents in the ConnectX game.</span>
 
 ## [ To Developers ]
 
