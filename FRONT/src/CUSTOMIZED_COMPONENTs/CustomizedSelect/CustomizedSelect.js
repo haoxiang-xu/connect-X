@@ -86,6 +86,8 @@ const OptionList = ({
 }) => {
   const { underDarkTheme } = React.useContext(GlobalContexts);
 
+  const containerRef = useRef(null);
+
   const [selectedOptionTextColor, setSelectedOptionTextColor] = useState(null);
   const [selectedOptionZIndex, setSelectedOptionZIndex] = useState(null);
   const [selectedOptionHeight, setSelectedOptionHeight] = useState(null);
@@ -133,9 +135,19 @@ const OptionList = ({
       setSelectedOptionHeight("0px");
     }
   }, [isExpanded]);
+  useEffect(() => {
+    if (containerRef.current) {
+      const index = options.indexOf(selectedOption);
+
+      if (index !== -1) {
+        containerRef.current.scrollTop = index * SELECT_DIMENSIONS.height;
+      }
+    }
+  }, [isExpanded]);
 
   return (
     <div
+      ref={containerRef}
       style={{
         position: "absolute",
         top: "100%",

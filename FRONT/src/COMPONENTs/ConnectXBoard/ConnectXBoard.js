@@ -764,10 +764,10 @@ const RefreshButton = () => {
 /* SUB COMPONENTS ---------------------------------------------------------------------------------------- */
 
 const ConnectXBoard = () => {
-  const { onPage, agent1Type, agent2Type } = useContext(GlobalContexts);
+  const { onPage, agent1Type, agent2Type, boardRows, boardColumns, inarow, setInarow } =
+    useContext(GlobalContexts);
 
   const [board, setBoard] = useState(EMPTY_BOARD);
-  const [inarow, setInarow] = useState(4);
   const [lastChecker, setLastChecker] = useState(null);
   const [boardDimensions, setBoardDimensions] = useState([0, 0]);
   const [currentTurn, setCurrentTurn] = useState(PLAYER_TYPES.PLAYER_1);
@@ -881,6 +881,14 @@ const ConnectXBoard = () => {
       setGameStatus(GAME_STATUS.IN_PROGRESS);
     }
   };
+  useEffect(() => {
+    initializeBoard(
+      boardColumns,
+      boardRows,
+      4,
+      agent1Type === "HUMAN" || agent2Type === "HUMAN"
+    );
+  }, [boardColumns, boardRows]);
   /* { CLEAR BOARD } */
   const clearBoard = () => {
     let empty_board = new Array(board.length);

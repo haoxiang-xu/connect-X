@@ -13,6 +13,10 @@ const ConnectXGameDataManager = () => {
   const [agent1Type, setAgent1Type] = useState("MONTE_CARLO");
   const [agent2Type, setAgent2Type] = useState("MONTE_CARLO");
 
+  const [boardRows, setBoardRows] = useState(6);
+  const [boardColumns, setBoardColumns] = useState(7);
+  const [inarow, setInarow] = useState(4);
+
   return (
     <GlobalContexts.Provider
       value={{
@@ -24,6 +28,12 @@ const ConnectXGameDataManager = () => {
         setAgent1Type,
         agent2Type,
         setAgent2Type,
+        boardRows,
+        setBoardRows,
+        boardColumns,
+        setBoardColumns,
+        inarow,
+        setInarow,
       }}
     >
       <ConnectXBoard />
