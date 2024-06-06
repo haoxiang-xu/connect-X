@@ -1,10 +1,14 @@
-# [Connect-X](http://143.110.216.120:3000/)
+# [Connect-X Playground](http://143.110.216.120:3000/)
 
 ## [ About the Project ]
 
 <img width="755" alt="Screenshot 2024-06-06 at 17 12 13" src="https://github.com/haoxiang-xu/connect-X/assets/59581718/4c19a6a5-9768-4d84-8168-bc3b53c4b7b9">
 
+<span style="opacity: 0.32">Dive into the world of ConnectX with our user-friendly web app, designed for everyone to enjoy and explore different game strategies. Whether you're a game enthusiast or just looking for some fun, our platform lets you watch and play against various artificial intelligence (AI) opponents in the ConnectX game. No coding or technical skills required—just play, learn, and have fun!</span>
+
 ## [ To Developers ]
+
+<span style="opacity: 0.32">This web application provides a comprehensive platform for testing and interacting with various AI agents developed for the ConnectX game. Built with a React frontend and a Python Flask backend, this platform offers a visually engaging interface that allows users to easily interact with and evaluate the performance of different game AI agents.</span>
 
 ### LOCAL SETUP
 
@@ -33,6 +37,8 @@
   - To install required dependencies `pip install -r requirements.txt`
   - Run Backend File Server `python BACK.py`
   - Server will running on `http://localhost:5000/` in development mode
+
+### IMPLEMENT AND TEST YOUR OWN AGENT
 
 ### DEPLOYMENT PROCESS
 
