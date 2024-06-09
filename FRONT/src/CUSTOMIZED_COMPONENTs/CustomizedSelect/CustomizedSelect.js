@@ -21,7 +21,8 @@ const SelectPrefix = ({ prefix, color }) => {
         style={{
           position: "absolute",
           top: "0px",
-          left: "6px",
+          left: "0px",
+          padding: "0px 0px 0px 6px",
           height: "100%",
           maxWidth: "50%",
           display: "flex",
