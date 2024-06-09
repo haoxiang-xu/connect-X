@@ -817,7 +817,9 @@ const ConnectXBoard = () => {
           break;
       }
     };
-    checkGameStatus();
+    if (lastChecker !== null) {
+      checkGameStatus();
+    }
   }, [currentTurn]);
   useEffect(() => {
     if (
@@ -883,6 +885,7 @@ const ConnectXBoard = () => {
     setBoard(new_board);
     setInarow(inarow);
     setWinningConnection([]);
+    setLastChecker(null);
     setCurrentTurn(PLAYER_TYPES.PLAYER_1);
     if (human_inolved) {
       setGameStatus(GAME_STATUS.IN_PROGRESS);
@@ -908,6 +911,7 @@ const ConnectXBoard = () => {
     }
     setBoard(empty_board);
     setWinningConnection([]);
+    setLastChecker(null);
     setCurrentTurn(PLAYER_TYPES.PLAYER_1);
     setGameStatus(GAME_STATUS.IN_PROGRESS);
   };
