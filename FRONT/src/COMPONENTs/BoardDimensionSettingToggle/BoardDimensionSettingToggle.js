@@ -78,7 +78,7 @@ const BoardDimensionSettingToggle = () => {
     } else if (mode === "ADD_COLUMN") {
       setAddButtonStyle({
         top: "50%",
-        left: "75%",
+        left: "80%",
         opacity: "1",
       });
       setSubtractButtonStyle({
@@ -89,7 +89,7 @@ const BoardDimensionSettingToggle = () => {
       setDisplayingText(boardColumns);
     } else if (mode === "ADD_ROW") {
       setAddButtonStyle({
-        top: "75%",
+        top: "80%",
         left: "50%",
         opacity: "1",
       });
@@ -107,7 +107,7 @@ const BoardDimensionSettingToggle = () => {
       });
       setSubtractButtonStyle({
         top: "50%",
-        left: "25%",
+        left: "20%",
         opacity: "1",
       });
       setDisplayingText(boardColumns);
@@ -118,7 +118,7 @@ const BoardDimensionSettingToggle = () => {
         opacity: "0",
       });
       setSubtractButtonStyle({
-        top: "25%",
+        top: "15%",
         left: "50%",
         opacity: "1",
       });

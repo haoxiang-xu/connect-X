@@ -589,14 +589,16 @@ class Agent:
             return self.move_human(observation, configuration)
         elif self.type == 'RANDOM':
             return self.move_random(observation, configuration)
+        elif self.type == 'AGGRESSIVE_MONTE_CARLO':
+            return self.move_greedy(observation, configuration, score_calculation_type = 'beta')
+        elif 'MINMAX_MONTE_CARLO' in self.type:
+            return self.move_minmax_monte_carlo(observation, configuration)
         elif 'GREEDY' in self.type:
             greedy_type = self.type.split(' | ')
             if len(greedy_type) == 1:
                 return self.move_greedy(observation, configuration)
             else:
                 return self.move_greedy(observation, configuration, score_calculation_type = greedy_type[1])
-        elif 'MINMAX_MONTE_CARLO' in self.type:
-            return self.move_minmax_monte_carlo(observation, configuration)
         elif 'MINMAX' in self.type:
             minmax_type = self.type.split(' | ')
             if len(minmax_type) == 1:
@@ -784,7 +786,7 @@ class Agent:
                     max_score = score
                     max_score_column = next_states[index].state_instance.last_checker[1]
         return max_score_column     
-    # { MONTE MINMAX CARLO AGENT }
+    # { MINMAX MONTE CARLO AGENT }
     def move_minmax_monte_carlo(self, observation, configuration, depth = 3, score_calculation_type = 'beta'):
         def minmax_search(current_state, depth, inarow, score_calculation_type):
             if depth == 0:
@@ -835,7 +837,6 @@ class Agent:
         
         current_state = ConnectX(inarow = inarow, board = board, turn = mark)
         return minmax_search(current_state, depth, inarow, score_calculation_type)['column']
-
 app = Flask(__name__)
 CORS(app)
 
