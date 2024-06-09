@@ -2,6 +2,7 @@
 
 ## [ Table of Contents ]
 - About the Project
+  - [Introduction](#intro)
   - [built with](#built-with)
 - To Everyone
 - To Developers
@@ -11,6 +12,16 @@
   - [deployment process](#deployment-process)
 
 ## [ About the Project ]
+
+### INTRO
+
+This project features a user-friendly UI that allows players to engage with classic AI algorithms or pit them against each other in the famed Kaggle Connect-X competition setting. It includes:
+
+1. Interactive UI: Play the Connect X game directly or watch AI algorithms compete.
+2. Multiple AI Algorithms: Explore several sophisticated AI strategies used in Kaggle's Connect-X competition.
+3. Custom Agent Development: Follow an easy-to-understand guide to develop your own AI agent, visually test it, and compete against existing algorithms.
+4. Deployment Instructions: Comprehensive deployment guidelines are provided for those looking to host this as a web application.
+
 <img width="316" alt="Screenshot 2024-06-06 at 18 12 42" src="https://github.com/haoxiang-xu/connect-X/assets/59581718/f9a796d9-9470-4d17-ba37-4af3eb666297">
 
 ### BUILT WITH
