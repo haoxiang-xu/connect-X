@@ -1,10 +1,10 @@
 # [Connect-X Playground](http://143.110.216.120:3000/)
 
 ## [ Table of Contents ]
-- [About the Project](#about-the-project)
+- About the Project
   - [built with](#built-with)
-- [To Everyone](#to-everyone)
-- [To Developers](#to-developers)
+- To Everyone
+- To Developers
   - [Local setup](#local-setup)
   - [current implemented agents](#current-implemented-agents)
   - [implement and test your own agent](#implement-and-test-your-own-agent)
