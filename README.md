@@ -4,6 +4,7 @@
 - About the Project
   - [Introduction](#intro)
   - [built with](#built-with)
+  - [Kaggle Submission](#kaggle-submission)
 - To Everyone
 - To Developers
   - [Local setup](#local-setup)
@@ -18,7 +19,7 @@
 This project features a user-friendly UI that allows players to engage with classic AI algorithms or pit them against each other in the famed Kaggle Connect-X competition setting. It includes:
 
 1. Interactive UI: Play the Connect X game directly or watch AI algorithms compete.
-2. Multiple AI Algorithms: Explore several sophisticated AI strategies used in Kaggle's Connect-X competition.
+2. Multiple AI Algorithms: Dive into a variety of classic AI algorithms used in competitive gaming, including [one](DEMOs/submission.py) that was entered into [Kaggle's Connect-X competition](https://www.kaggle.com/competitions/connectx/overview).
 3. Custom Agent Development: Follow an easy-to-understand guide to develop your own AI agent, visually test it, and compete against existing algorithms.
 4. Deployment Instructions: Comprehensive deployment guidelines are provided for those looking to host this as a web application.
 
@@ -30,10 +31,13 @@ This project features a user-friendly UI that allows players to engage with clas
 [![Docker][Docker-download-shield]][Docker-install]
 [![vscode][vscode-download-shield]][vscode-install]
 
+### KAGGLE SUBMISSION
+
+Check the [Kaggle Submission](DEMOs/submission.py)
+
 ## [ To Everyone ]
 
 [TRY IT OUT](http://143.110.216.120:3000/)
-
 
 ## [ To Developers ]
 
