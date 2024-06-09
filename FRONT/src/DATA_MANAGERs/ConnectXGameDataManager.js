@@ -16,6 +16,8 @@ const ConnectXGameDataManager = () => {
   const [boardRows, setBoardRows] = useState(6);
   const [boardColumns, setBoardColumns] = useState(7);
   const [inarow, setInarow] = useState(4);
+  const [showUnlinkableCheckerSwitch, setShowUnlinkableCheckerSwitch] =
+    useState(true);
 
   return (
     <GlobalContexts.Provider
@@ -34,6 +36,8 @@ const ConnectXGameDataManager = () => {
         setBoardColumns,
         inarow,
         setInarow,
+        showUnlinkableCheckerSwitch,
+        setShowUnlinkableCheckerSwitch,
       }}
     >
       <ConnectXBoard />

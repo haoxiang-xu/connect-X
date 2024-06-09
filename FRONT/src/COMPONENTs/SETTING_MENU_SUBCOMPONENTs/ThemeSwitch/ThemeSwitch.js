@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 
-import { GlobalContexts } from "../../CONTEXTs/GlobalContexts";
-import { ThemeSwitchContexts } from "../../CONTEXTs/ThemeSwitchContexts";
+import { GlobalContexts } from "../../../CONTEXTs/GlobalContexts";
+import { ThemeSwitchContexts } from "../../../CONTEXTs/ThemeSwitchContexts";
 
-import { GLOABL_COLOR_MANAGER } from "../../CONSTs/GlobalColorManager";
+import { GLOABL_COLOR_MANAGER } from "../../../CONSTs/GlobalColorManager";
 
 import { RiMoonFill, RiSunFill } from "@remixicon/react";
 

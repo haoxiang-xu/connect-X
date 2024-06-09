@@ -1,8 +1,8 @@
 import React, { useEffect, useRef, useState, useContext } from "react";
 
-import { GlobalContexts } from "../../CONTEXTs/GlobalContexts";
+import { GlobalContexts } from "../../../CONTEXTs/GlobalContexts";
 
-import { GLOABL_COLOR_MANAGER } from "../../CONSTs/GlobalColorManager";
+import { GLOABL_COLOR_MANAGER } from "../../../CONSTs/GlobalColorManager";
 
 import { RiArrowUpSLine, RiArrowDownSLine } from "@remixicon/react";
 

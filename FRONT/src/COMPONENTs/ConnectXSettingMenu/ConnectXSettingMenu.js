@@ -4,9 +4,10 @@ import { GLOABL_COLOR_MANAGER } from "../../CONSTs/GlobalColorManager";
 
 import { GlobalContexts } from "../../CONTEXTs/GlobalContexts";
 
-import ThemeSwitch from "../ThemeSwitch/ThemeSwitch";
-import BoardDimensionSettingToggle from "../BoardDimensionSettingToggle/BoardDimensionSettingToggle";
-import BoardInARowSettingSwitch from "../BoardInARowSettingSwitch/BoardInARowSettingSwitch";
+import ThemeSwitch from "../SETTING_MENU_SUBCOMPONENTs/ThemeSwitch/ThemeSwitch";
+import HideOrShowUnlinkableCheckerSwitch from "../SETTING_MENU_SUBCOMPONENTs/HideOrShowUnlinkableCheckerSwitch/HideOrShowUnlinkableCheckerSwitch";
+import BoardDimensionSettingToggle from "../SETTING_MENU_SUBCOMPONENTs/BoardDimensionSettingToggle/BoardDimensionSettingToggle";
+import BoardInARowSettingSwitch from "../SETTING_MENU_SUBCOMPONENTs/BoardInARowSettingSwitch/BoardInARowSettingSwitch";
 import CustomizedSelect from "../../CUSTOMIZED_COMPONENTs/CustomizedSelect/CustomizedSelect";
 
 import { RiSettingsLine, RiArrowDownWideFill } from "@remixicon/react";
@@ -99,6 +100,7 @@ const SettingMenuPanel = () => {
       <Agent2Select />
       <BoardDimensionSettingToggle />
       <BoardInARowSettingSwitch />
+      <HideOrShowUnlinkableCheckerSwitch />
     </div>
   );
 };
