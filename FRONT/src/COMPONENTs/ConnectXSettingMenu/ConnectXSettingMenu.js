@@ -22,8 +22,7 @@ const AGENT_TYPES = [
   "GREEDY",
   "MINMAX",
   "MONTE_CARLO",
-  "MINMAX_MC",
-  "AGGRESSIVE_MC",
+  "AGGRESSIVE_MONTE_CARLO",
 ];
 
 /* { AGENT 1 SELECT } */

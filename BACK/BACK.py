@@ -589,9 +589,9 @@ class Agent:
             return self.move_human(observation, configuration)
         elif self.type == 'RANDOM':
             return self.move_random(observation, configuration)
-        elif self.type == 'AGGRESSIVE_MC':
+        elif self.type == 'AGGRESSIVE_MONTE_CARLO':
             return self.move_greedy(observation, configuration, score_calculation_type = 'beta')
-        elif 'MINMAX_MC' in self.type:
+        elif self.type == 'MINMAX_MONTE_CARLO':
             return self.move_minmax_monte_carlo(observation, configuration)
         elif 'GREEDY' in self.type:
             greedy_type = self.type.split(' | ')
