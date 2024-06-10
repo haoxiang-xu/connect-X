@@ -1,5 +1,6 @@
 import copy
 import random
+import numpy as np
 from types import SimpleNamespace
 
 class ConnectX:
@@ -378,7 +379,7 @@ def act(observation, configuration):
     def flat_to_2d(board, rows, columns):
         return [board[i * columns:(i + 1) * columns] for i in range(rows)]
     
-    board_2d = flat_to_2d(observation.board, configuration.rows, configuration.columns)
+    board_2d = np.array(flat_to_2d(observation.board, configuration.rows, configuration.columns)).tolist()[::-1]
     print(board_2d)
     converted_observation = SimpleNamespace(
         board = board_2d,
