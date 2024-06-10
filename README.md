@@ -19,7 +19,7 @@
 This project features a user-friendly UI that allows players to engage with classic AI algorithms or pit them against each other in the famed Kaggle Connect-X competition setting. It includes:
 
 1. Interactive UI: Play the Connect X game directly or watch AI algorithms compete.
-2. Multiple AI Algorithms: Dive into a variety of classic AI algorithms used in competitive gaming, including [one](DEMOs/submission.py) that was entered into [Kaggle's Connect-X competition](https://www.kaggle.com/competitions/connectx/overview).
+2. Multiple AI Algorithms: Dive into a variety of classic AI algorithms used in competitive gaming, including [one](DEMOs/submission.py) that was entered into [Kaggle's Connect-X competition](https://www.kaggle.com/competitions/connectx/overview) and achieved a notable 16th place ranking.
    
 <img width="1152" alt="Screenshot 2024-06-10 at 12 31 44" src="https://github.com/haoxiang-xu/connect-X/assets/59581718/41273866-55aa-4cc7-b110-5db8ef2c7a80">
 
