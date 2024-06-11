@@ -105,18 +105,15 @@ const PLAYER_CURSORs = {
 /* FETCH =========================================================================================== FETCH */
 const requestMovement = async (board, playerType, agentType, inarow) => {
   try {
-    const response = await axios.post(
-      "http://localhost:5000/request_agent_movement",
-      {
-        board: board.map((row) =>
-          row.map((cell) => (cell === 1 ? 1 : cell === 2 ? 2 : 0))
-        ),
-        player: playerType,
-        agent: String(agentType),
+    const response = await axios.post(`http://localhost:5000/request_agent_movement`, {
+      board: board.map((row) =>
+        row.map((cell) => (cell === 1 ? 1 : cell === 2 ? 2 : 0))
+      ),
+      player: playerType,
+      agent: String(agentType),
 
-        inarow: inarow,
-      }
-    );
+      inarow: inarow,
+    });
     return response.data.column;
   } catch (error) {
     console.error("Error fetching the move from the backend:", error);
@@ -125,17 +122,14 @@ const requestMovement = async (board, playerType, agentType, inarow) => {
 };
 const checkStateStatus = async (board, playerType, inarow, lastChecker) => {
   try {
-    const response = await axios.post(
-      "http://localhost:5000/check_state_status",
-      {
-        board: board.map((row) =>
-          row.map((cell) => (cell === 1 ? 1 : cell === 2 ? 2 : 0))
-        ),
-        player: playerType,
-        inarow: inarow,
-        lastChecker: lastChecker,
-      }
-    );
+    const response = await axios.post(`http://localhost:5000/check_state_status`, {
+      board: board.map((row) =>
+        row.map((cell) => (cell === 1 ? 1 : cell === 2 ? 2 : 0))
+      ),
+      player: playerType,
+      inarow: inarow,
+      lastChecker: lastChecker,
+    });
     return response.data.status;
   } catch (error) {
     console.error("Error fetching the move from the backend:", error);
@@ -150,7 +144,7 @@ const requestTheWinningConnection = async (
 ) => {
   try {
     const response = await axios.post(
-      "http://localhost:5000/request_the_winning_connection",
+      `http://localhost:5000/request_the_winning_connection`,
       {
         board: board.map((row) =>
           row.map((cell) => (cell === 1 ? 1 : cell === 2 ? 2 : 0))
