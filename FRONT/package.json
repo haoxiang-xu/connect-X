@@ -29,6 +29,7 @@
   },
   "main": "main.js",
   "scripts": {
+    "postinstall": "./setup_python_env.sh",
     "start": "concurrently \"npm run react-start\" \"npm run electron-start\"",
     "build": "react-scripts build",
     "test": "react-scripts test",
@@ -66,6 +67,11 @@
       "node_modules/**/*",
       "!**/*.map",
       "../BACK/**/*"
+    ],
+    "extraFiles": [
+      "BACK/**",
+      "requirements.txt",
+      "setup_python_env.sh"
     ],
     "extraMetadata": {
       "main": "main.js"

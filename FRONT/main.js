@@ -11,8 +11,8 @@ frontendReactApp.listen(3000, () => {});
 
 const createWindow = () => {
   const setupFlask = () => {
-    const scriptPath = path.join(__dirname, "../BACK/BACK.py");
-    backendFlaskApp = spawn("python", [scriptPath]);
+    const flaskAppPath = path.join(__dirname, "../BACK/dist/BACK");
+    backendFlaskApp = spawn(flaskAppPath);
     backendFlaskApp.on("error", (err) => {
       console.error("Failed to start Flask process:", err);
     });
