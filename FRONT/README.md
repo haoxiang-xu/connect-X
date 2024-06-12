@@ -1,70 +1,54 @@
-# Getting Started with Create React App
+# Connect-X-ReactJS-APP V0.2
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## [ Table of Contents ]
+- To Developers
+  - [Local setup](#local-setup)
+  - [Update](#update)
+  - [deployment process](#deployment-process)
 
-## Available Scripts
+## [ To Developers ]
 
-In the project directory, you can run:
+### LOCAL SETUP
 
-### `npm start`
+- **Setup the Frontend React Application**
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+  - To Frontend Testing Application Directory `cd FRONT`
+  - To install required modules `npm install`
+  - Run Frontend Testing Application `npm start`
+  - Heading to the Application `http://localhost:3000/`
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+### UPDATE
 
-### `npm test`
+VERSION 0.3
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+    - 
 
-### `npm run build`
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### DEPLOYMENT PROCESS
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+<span style="opacity: 0.64">Notice: This deployment process will only works for the project owner in a Digital Ocean linux AMD server, You can use this as a reference. To deploy the project on your own server please check out [PROJECT README](../README.md)</span>
 
-### `npm run eject`
+<span style="opacity: 0.64">1. Build Local Project into Docker images and push to Docker hub, Notice that [VERSION NUMBER] needs to be replaced.</span>
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+- `docker buildx create --use`
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+- To Frontend React Application Dir `cd FRONT`
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+- Build the Frontend React App in linux/amd64 ENV and push to docker hub `docker buildx build --platform linux/amd64 -t bananamilkt/connect-x-frontend:v[VERSION_NUMBER] --push .`
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+- To Backend Python Flask Application Dir `cd BACK`
 
-## Learn More
+- Build the Backend Python Flask Application in linux/amd64 ENV and push to docker hub `docker buildx build --platform linux/amd64 -t bananamilkt/connect-x-frontend:v[VERSION_NUMBER] --push .`
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+<span style="opacity: 0.64">2. After Server started, you should login into your docker account, pull your docker hub repo and build start the docker images.</span>
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+- To login your docker account `docker login`
 
-### Code Splitting
+- (Optional) Stop and remove current running container if necessary `docker stop connect-x-frontend` -> `docker rm connect-x-frontend`
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+- To pull Both frontend and backend Applications `docker pull bananamilkt/connect-x-frontend:v[VERSION_NUMBER]`
 
-### Analyzing the Bundle Size
+- To run the Frontend React Application `docker run -d -p 3000:3000 --name connect-x-frontend bananamilkt/connect-x-frontend:v[VERSION_NUMBER]`
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+- (Optional) Check if the container is running `docker ps`
