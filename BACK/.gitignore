@@ -1,2 +1,5 @@
 # production
 /build
+/dist
+
+BACK.spec
