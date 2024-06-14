@@ -537,6 +537,7 @@ const UncontrollableFingerCursor = ({ playerType }) => {
     isCursorDown,
     boardDimensions,
     currentTurn,
+    gameStatus,
     pointingColumn,
     underDarkTheme,
   ]);

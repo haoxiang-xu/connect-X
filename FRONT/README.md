@@ -3,7 +3,6 @@
 ## [ Table of Contents ]
 - To Developers
   - [Local setup](#local-setup)
-  - [Update](#update)
   - [deployment process](#deployment-process)
 
 ## [ To Developers ]
@@ -17,14 +16,6 @@
   - Run Frontend Testing Application `npm start`
   - Heading to the Application `http://localhost:3000/`
 
-### UPDATE
-
-VERSION 0.3
-
-    - 
-
-
-
 ### DEPLOYMENT PROCESS
 
 <span style="opacity: 0.64">Notice: This deployment process will only works for the project owner in a Digital Ocean linux AMD server, You can use this as a reference. To deploy the project on your own server please check out [PROJECT README](../README.md)</span>
@@ -36,10 +27,6 @@ VERSION 0.3
 - To Frontend React Application Dir `cd FRONT`
 
 - Build the Frontend React App in linux/amd64 ENV and push to docker hub `docker buildx build --platform linux/amd64 -t bananamilkt/connect-x-frontend:v[VERSION_NUMBER] --push .`
-
-- To Backend Python Flask Application Dir `cd BACK`
-
-- Build the Backend Python Flask Application in linux/amd64 ENV and push to docker hub `docker buildx build --platform linux/amd64 -t bananamilkt/connect-x-frontend:v[VERSION_NUMBER] --push .`
 
 <span style="opacity: 0.64">2. After Server started, you should login into your docker account, pull your docker hub repo and build start the docker images.</span>
 
