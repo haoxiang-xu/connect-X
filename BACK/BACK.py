@@ -585,7 +585,7 @@ class ConnectX:
 Copyright 2020, Sidhant Agarwal, sidhant11136@gmail.com, All rights reserved.
 Borrowed from https://github.com/sidhantagar/ConnectX under the MIT license.
 """
-class SidhantAgarwal:
+class SAVK_MINMAX:
     def __init__(self):
         self.max_score = None
     def score_move_a(self, grid, col, mark, config, start_score, n_steps=1):
@@ -753,11 +753,11 @@ class Agent:
             return self.move_human(observation, configuration)
         elif self.type == 'RANDOM':
             return self.move_random(observation, configuration)
-        elif self.type == 'AGGRESSIVE_MC':
+        elif self.type == 'MONTE_CARLO':
             return self.move_greedy(observation, configuration, score_calculation_type = 'beta')
         elif self.type == 'MINMAX_MC':
             return self.move_minmax_monte_carlo(observation, configuration)
-        elif self.type == 'SIDHANT_AGARWAL':
+        elif self.type == 'SAVK_MINMAX':
             def board_2d_to_flat(board_2d):
                 board_2d_original = board_2d[::-1]
                 flat_board = [cell for row in board_2d_original for cell in row]
@@ -767,7 +767,7 @@ class Agent:
                 board = original_flat_board,
                 mark = observation.mark
             )
-            S = SidhantAgarwal()
+            S = SAVK_MINMAX()
             return S.agent(converted_observation, configuration)
         elif 'GREEDY' in self.type:
             greedy_type = self.type.split(' | ')
