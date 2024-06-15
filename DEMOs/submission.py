@@ -47,7 +47,7 @@ class ConnectX:
                 return i
         
         return -1
-# { BOARD STATEs } ---------------------------------------------------------------------------
+    # { BOARD STATEs } ---------------------------------------------------------------------------
     def pervious_state(self):
         pervious_state = ConnectX(inarow = self.inarow, board = self.board, turn = self.turn, last_checker = self.last_checker)
         pervious_state.retrieve_last_checker()
@@ -70,7 +70,7 @@ class ConnectX:
             return None
         else:
             return next_states
-   # { STATE SPACE SCORE CALCULATION } -----------------------------------------------------------
+    # { STATE SPACE SCORE CALCULATION } -----------------------------------------------------------
     def score(self, score_calculation_type = 'NONE'): 
         if score_calculation_type == 'last_checker_longest_connection':
             return self.last_checker_longest_connection()
