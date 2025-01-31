@@ -1100,4 +1100,4 @@ def request_the_winning_connection():
     return jsonify({'inarowCheckerPositions': inarow_checker_positions})
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
+    app.run(host='0.0.0.0', port=8000)
